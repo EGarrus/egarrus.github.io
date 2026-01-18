@@ -45,14 +45,10 @@ export function renderMovementUI() {
     // На последнем чанке - можно начать заново или перейти дальше
     text.textContent = '🏁 Конец локации';
     btn.onclick = () => showLocationEnd();
-    btn.onmousedown = btn.ontouchstart = null;
   } else {
     // Обычный шаг вперёд
     text.textContent = `🚶 Сделать шаг (${S.chunk + 1}/${L.chunks})`;
-    btn.onclick = null;
-    btn.onmousedown = btn.ontouchstart = () => startStep();
-    btn.onmouseup = btn.ontouchend = () => stopStep();
-    btn.onmouseleave = () => stopStep();
+    btn.onclick = () => startStep();
   }
   
   if (prog) prog.style.width = '0';
