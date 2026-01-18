@@ -155,35 +155,29 @@ body{max-width:480px;margin:0 auto;height:100vh;display:flex;flex-direction:colu
 <div class="modal" id="modal"><div class="modal-box"><div class="modal-head"><div class="modal-title" id="modTitle"></div><button class="modal-close" onclick="closeMod()">×</button></div><div id="modContent"></div></div></div>
 <script type="module">
 // Импорт модулей
-try {
-  import { initGame } from './js/init.js';
-  import { S } from './js/gameState.js';
-  import { startStep, stopStep } from './js/movement.js';
-  import { cityTab, renderCity } from './js/city.js';
-  import { nav } from './js/ui.js';
-  import { renderInv } from './js/inventory.js';
-  import { renderLocList } from './js/locations.js';
-  import { renderMast } from './js/mastery.js';
-  import { wave, duel } from './js/events.js';
+import { initGame } from './js/init.js';
+import { S } from './js/gameState.js';
+import { startStep, stopStep } from './js/movement.js';
+import { cityTab, renderCity } from './js/city.js';
+import { nav } from './js/ui.js';
+import { renderInv } from './js/inventory.js';
+import { renderLocList } from './js/locations.js';
+import { renderMast } from './js/mastery.js';
+import { wave, duel } from './js/events.js';
 
-  // Глобальные функции для HTML
-  window.cityTab = cityTab;
-  window.startStep = startStep;
-  window.stopStep = stopStep;
-  window.nav = nav;
-  window.renderInv = renderInv;
-  window.renderLocList = renderLocList;
-  window.renderCity = renderCity;
-  window.renderMast = renderMast;
-  window.wave = wave;
-  window.duel = duel;
+// Глобальные функции для HTML
+window.cityTab = cityTab;
+window.startStep = startStep;
+window.stopStep = stopStep;
+window.nav = nav;
+window.renderInv = renderInv;
+window.renderLocList = renderLocList;
+window.renderCity = renderCity;
+window.renderMast = renderMast;
+window.wave = wave;
+window.duel = duel;
 
-  // Инициализация игры
-  initGame();
-} catch (error) {
-  console.error('Ошибка загрузки модулей:', error);
-  document.body.innerHTML = '<div style="padding:20px;text-align:center;color:#e8e6e3;font-family:monospace"><h2>Ошибка загрузки игры</h2><p>' + error.message + '</p><p>Проверьте консоль для деталей</p></div>';
-}
+// Инициализация игры происходит в init.js через DOMContentLoaded
 </script>
 <script>
 // Утилита для обратной совместимости

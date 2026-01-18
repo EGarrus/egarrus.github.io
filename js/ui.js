@@ -2,6 +2,9 @@
 
 import { S, saveGame } from './gameState.js';
 
+// Импортируем функции после их определения для избежания циклических зависимостей
+let renderInv, renderLocList, renderCity, renderMast;
+
 export function updHdr() {
   const hpEl = document.getElementById('hdrHp');
   const goldEl = document.getElementById('hdrGold');
@@ -18,19 +21,11 @@ export function nav(s, btn) {
   document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
   if (btn) btn.classList.add('active');
 
-  // Динамический импорт для избежания циклических зависимостей
-  if (s === 'Inv') {
-    import('./inventory.js').then(m => m.renderInv());
-  }
-  if (s === 'Map') {
-    import('./locations.js').then(m => m.renderLocList());
-  }
-  if (s === 'City') {
-    import('./city.js').then(m => m.renderCity());
-  }
-  if (s === 'Mast') {
-    import('./mastery.js').then(m => m.renderMast());
-  }
+  // Используем глобальные функции
+  if (s === 'Inv' && window.renderInv) window.renderInv();
+  if (s === 'Map' && window.renderLocList) window.renderLocList();
+  if (s === 'City' && window.renderCity) window.renderCity();
+  if (s === 'Mast' && window.renderMast) window.renderMast();
 }
 
 export function closeMod() {
