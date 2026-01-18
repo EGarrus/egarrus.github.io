@@ -9,7 +9,7 @@ export function renderCity() {
 }
 
 export function cityTab(t) {
-  document.querySelectorAll('.city-tab').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
   document.querySelectorAll('.city-panel').forEach(x => x.classList.remove('active'));
 
   const tab = document.querySelector(`[onclick="cityTab('${t}')"]`);
@@ -204,10 +204,11 @@ export function renderAuc() {
 }
 
 export function renderAucItems() {
-  const grid = document.getElementById('aucItemsGrid');
-  if (!grid) return;
+  const tabsGrid = document.getElementById('aucTabsGrid');
+  const itemsGrid = document.getElementById('aucItemsGrid');
+  if (!tabsGrid || !itemsGrid) return;
 
-  let h = '<div class="auc-tabs">';
+  let h = '';
   const cats = ['all', 'weapon', 'armor', 'tool'];
   for (const cat of cats) {
     h += `<button class="auc-tab" onclick="toggleAucGroup('${cat}')">${
@@ -216,13 +217,9 @@ export function renderAucItems() {
       cat === 'armor' ? 'Броня' : 'Инструменты'
     }</button>`;
   }
-  h += '</div>';
+  tabsGrid.innerHTML = h;
 
-  h += '<div class="auc-items" id="aucItems">';
-  // Здесь будут товары
-  h += '</div>';
-
-  grid.innerHTML = h;
+  // Начнем с показа всех товаров
   toggleAucGroup('all');
 }
 
@@ -237,7 +234,7 @@ export function toggleAucGroup(cat) {
   );
   if (tab) tab.classList.add('active');
 
-  const items = document.getElementById('aucItems');
+  const items = document.getElementById('aucItemsGrid');
   if (!items) return;
 
   let h = '';
