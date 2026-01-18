@@ -74,11 +74,25 @@ export function craft(k) {
   saveGame();
 }
 
-// Остальные функции города (сократить для краткости)
 export function renderBank() {
   renderBankRes();
   renderBankItems();
 }
+
+// Экспорт для глобального использования
+window.cityTab = cityTab;
+window.renderCity = renderCity;
+window.renderCraft = renderCraft;
+window.craft = craft;
+window.renderBank = renderBank;
+window.depositRes = depositRes;
+window.withdrawRes = withdrawRes;
+window.depositItem = depositItem;
+window.withdrawItem = withdrawItem;
+window.toggleAucGroup = toggleAucGroup;
+window.showSell = showSell;
+window.sellAuc = sellAuc;
+window.buyAuc = buyAuc;
 
 export function renderBankRes() {
   const grid = document.getElementById('bankResGrid');
@@ -92,12 +106,20 @@ export function renderBankRes() {
     h += `<div class="bank-item">
       <div class="bank-icon">${icon}</div>
       <div class="bank-info">
-        <div class="bank-name">${res === 'wood' ? 'Дерево' : res === 'metal' ? 'Металл' : res === 'cloth' ? 'Ткань' : 'Кожа'}</div>
+        <div class="bank-name">${
+          res === 'wood' ? 'Дерево' :
+          res === 'metal' ? 'Металл' :
+          res === 'cloth' ? 'Ткань' : 'Кожа'
+        }</div>
         <div class="bank-amt">У вас: ${amt} | В банке: ${bankAmt}</div>
       </div>
       <div class="bank-acts">
-        <button class="btn btn-s btn-sm" onclick="depositRes('${res}')" ${amt <= 0 ? 'disabled' : ''}>→</button>
-        <button class="btn btn-s btn-sm" onclick="withdrawRes('${res}')" ${bankAmt <= 0 ? 'disabled' : ''}>←</button>
+        <button class="btn btn-s btn-sm" onclick="depositRes('${res}')" ${
+          amt <= 0 ? 'disabled' : ''
+        }>→</button>
+        <button class="btn btn-s btn-sm" onclick="withdrawRes('${res}')" ${
+          bankAmt <= 0 ? 'disabled' : ''
+        }>←</button>
       </div>
     </div>`;
   }
@@ -121,16 +143,204 @@ export function withdrawRes(res) {
   saveGame();
 }
 
-// Остальные функции сокращены для краткости
-export function renderBankItems() { /* реализация */ }
-export function depositItem(ik) { /* реализация */ }
-export function withdrawItem(ik) { /* реализация */ }
-export function renderAuc() { /* реализация */ }
-export function toggleAucGroup(cat) { /* реализация */ }
-export function renderAucSell() { /* реализация */ }
-export function showSell(ik) { /* реализация */ }
-export function sellAuc(ik, price) { /* реализация */ }
-export function buyAuc(ik, price) { /* реализация */ }
+export function renderBankItems() {
+  const grid = document.getElementById('bankItemsGrid');
+  if (!grid) return;
+
+  let h = '';
+  const allItems = [...new Set([...S.p.inv, ...S.p.bank.items])];
+
+  for (const ik of allItems) {
+    const it = ITEMS[ik];
+    if (!it) continue;
+
+    const invCount = S.p.inv.filter(i => i === ik).length;
+    const bankCount = S.p.bank.items.filter(i => i === ik).length;
+
+    h += `<div class="bank-item">
+      <div class="bank-icon">${it.icon}</div>
+      <div class="bank-info">
+        <div class="bank-name">${it.name}</div>
+        <div class="bank-amt">У вас: ${invCount} | В банке: ${bankCount}</div>
+      </div>
+      <div class="bank-acts">
+        <button class="btn btn-s btn-sm" onclick="depositItem('${ik}')" ${
+          invCount <= 0 ? 'disabled' : ''
+        }>→</button>
+        <button class="btn btn-s btn-sm" onclick="withdrawItem('${ik}')" ${
+          bankCount <= 0 ? 'disabled' : ''
+        }>←</button>
+      </div>
+    </div>`;
+  }
+  grid.innerHTML = h;
+}
+
+export function depositItem(ik) {
+  const idx = S.p.inv.indexOf(ik);
+  if (idx === -1) return;
+
+  S.p.inv.splice(idx, 1);
+  S.p.bank.items.push(ik);
+  renderBankItems();
+  if (window.renderInv) window.renderInv();
+  saveGame();
+}
+
+export function withdrawItem(ik) {
+  const idx = S.p.bank.items.indexOf(ik);
+  if (idx === -1) return;
+
+  S.p.bank.items.splice(idx, 1);
+  S.p.inv.push(ik);
+  renderBankItems();
+  if (window.renderInv) window.renderInv();
+  saveGame();
+}
+
+export function renderAuc() {
+  renderAucItems();
+  renderAucSell();
+}
+
+export function renderAucItems() {
+  const grid = document.getElementById('aucItemsGrid');
+  if (!grid) return;
+
+  let h = '<div class="auc-tabs">';
+  const cats = ['all', 'weapon', 'armor', 'tool'];
+  for (const cat of cats) {
+    h += `<button class="auc-tab" onclick="toggleAucGroup('${cat}')">${
+      cat === 'all' ? 'Все' :
+      cat === 'weapon' ? 'Оружие' :
+      cat === 'armor' ? 'Броня' : 'Инструменты'
+    }</button>`;
+  }
+  h += '</div>';
+
+  h += '<div class="auc-items" id="aucItems">';
+  // Здесь будут товары
+  h += '</div>';
+
+  grid.innerHTML = h;
+  toggleAucGroup('all');
+}
+
+export function toggleAucGroup(cat) {
+  document.querySelectorAll('.auc-tab').forEach(x => x.classList.remove('active'));
+  const tab = Array.from(document.querySelectorAll('.auc-tab')).find(x =>
+    x.textContent === (
+      cat === 'all' ? 'Все' :
+      cat === 'weapon' ? 'Оружие' :
+      cat === 'armor' ? 'Броня' : 'Инструменты'
+    )
+  );
+  if (tab) tab.classList.add('active');
+
+  const items = document.getElementById('aucItems');
+  if (!items) return;
+
+  let h = '';
+  const aucItems = [
+    {item: 'iron_sword', price: 25},
+    {item: 'wooden_bow', price: 15},
+    {item: 'cloth_robe', price: 20},
+    {item: 'leather_armor', price: 30},
+    {item: 'pickaxe', price: 10}
+  ];
+
+  for (const ai of aucItems) {
+    const it = ITEMS[ai.item];
+    if (!it) continue;
+
+    let show = cat === 'all';
+    if (!show) {
+      if (cat === 'weapon' && (it.slot === 'mainHand' || it.slot === 'offHand')) show = true;
+      if (cat === 'armor' && (it.slot === 'chest' || it.slot === 'boots')) show = true;
+      if (cat === 'tool' && it.slot === 'tool') show = true;
+    }
+
+    if (show) {
+      h += `<div class="auc-item">
+        <div class="auc-icon">${it.icon}</div>
+        <div class="auc-info">
+          <div class="auc-name">${it.name}</div>
+          <div class="auc-price">💰${ai.price}</div>
+        </div>
+        <button class="btn btn-p btn-sm" onclick="buyAuc('${ai.item}', ${ai.price})" ${
+          S.p.gold < ai.price ? 'disabled' : ''
+        }>Купить</button>
+      </div>`;
+    }
+  }
+  items.innerHTML = h;
+}
+
+export function renderAucSell() {
+  const grid = document.getElementById('aucSellGrid');
+  if (!grid) return;
+
+  let h = '';
+  for (const ik of S.p.inv) {
+    const it = ITEMS[ik];
+    if (!it) continue;
+
+    h += `<div class="auc-sell-item">
+      <div class="auc-icon">${it.icon}</div>
+      <div class="auc-info">
+        <div class="auc-name">${it.name}</div>
+        <div class="auc-price">💰${Math.floor(Math.random() * 10) + 5}</div>
+      </div>
+      <button class="btn btn-s btn-sm" onclick="showSell('${ik}')">Продать</button>
+    </div>`;
+  }
+  grid.innerHTML = h;
+}
+
+export function showSell(ik) {
+  const modTitle = document.getElementById('modTitle');
+  const modContent = document.getElementById('modContent');
+  const modal = document.getElementById('modal');
+
+  const it = ITEMS[ik];
+  const price = Math.floor(Math.random() * 10) + 5;
+
+  if (modTitle) modTitle.textContent = 'Продажа';
+  if (modContent) modContent.innerHTML = `
+    <p>Продать ${it.icon} ${it.name} за 💰${price}?</p>
+    <button class="btn btn-p" onclick="sellAuc('${ik}', ${price})">Да</button>
+    <button class="btn btn-s" onclick="closeMod()">Нет</button>
+  `;
+  if (modal) modal.classList.add('active');
+}
+
+export function sellAuc(ik, price) {
+  const idx = S.p.inv.indexOf(ik);
+  if (idx === -1) return;
+
+  S.p.inv.splice(idx, 1);
+  S.p.gold += price;
+  renderAucSell();
+  if (window.renderInv) window.renderInv();
+  updHdr();
+  if (window.closeMod) window.closeMod();
+  saveGame();
+}
+
+export function buyAuc(ik, price) {
+  if (S.p.gold < price) return;
+
+  S.p.gold -= price;
+  S.p.inv.push(ik);
+  toggleAucGroup(
+    document.querySelector('.auc-tab.active')?.textContent === 'Все' ? 'all' :
+    document.querySelector('.auc-tab.active')?.textContent === 'Оружие' ? 'weapon' :
+    document.querySelector('.auc-tab.active')?.textContent === 'Броня' ? 'armor' : 'tool'
+  );
+  if (window.renderInv) window.renderInv();
+  updHdr();
+  saveGame();
+}
 
 // Экспорт для глобального использования
 window.cityTab = cityTab;
@@ -140,3 +350,9 @@ window.craft = craft;
 window.renderBank = renderBank;
 window.depositRes = depositRes;
 window.withdrawRes = withdrawRes;
+window.depositItem = depositItem;
+window.withdrawItem = withdrawItem;
+window.toggleAucGroup = toggleAucGroup;
+window.showSell = showSell;
+window.sellAuc = sellAuc;
+window.buyAuc = buyAuc;
