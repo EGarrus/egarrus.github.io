@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>MMORPG</title>
+<title>MMORPG Reforged</title>
 <style>
+/* CSS STYLES */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#1a1d23;--card:#23272f;--border:#363b44;--text:#e8e6e3;--dim:#9a9fa8;--muted:#5c6370;--accent:#c9a227;--hp:#c94a4a;--xp:#8b5cf6;--ok:#4ade80;--bad:#ef4444;--warn:#f59e0b}
 body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);max-width:480px;margin:0 auto;height:100vh;display:flex;flex-direction:column;overflow:hidden;user-select:none}
@@ -17,6 +18,7 @@ body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);max
 .screen{display:none}.screen.active{display:block}
 .card{background:var(--card);border-radius:10px;padding:12px;margin-bottom:10px;border:1px solid var(--border);position:relative}
 .card-title{font-size:12px;font-weight:600;color:var(--dim);text-transform:uppercase;margin-bottom:10px}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .btn{padding:10px 14px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%}
 .btn-p{background:var(--accent);color:#000}.btn-s{background:var(--bg);color:var(--text);border:1px solid var(--border)}
 .btn-d{background:var(--bad);color:#fff}.btn-w{background:var(--warn);color:#000}
@@ -30,9 +32,8 @@ body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);max
 .step-btn{position:relative;overflow:hidden;padding:14px}.step-prog{position:absolute;left:0;top:0;height:100%;background:rgba(255,255,255,.2);width:0;transition:width .05s linear}
 .step-time{font-size:11px;color:var(--dim);text-align:center;margin-top:6px}
 .travel-bar{background:var(--bg);border-radius:6px;padding:10px;margin-bottom:10px}
-.travel-bar h4{font-size:12px;margin-bottom:6px;color:var(--accent)}
-.travel-prog{height:6px;background:var(--border);border-radius:3px;overflow:hidden}.travel-prog-fill{height:100%;background:var(--accent);transition:width .1s}
-.map-btn{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:8px;font-size:16px}
+.travel-prog{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin:6px 0}.travel-prog-fill{height:100%;background:var(--accent);transition:width .1s linear}
+.map-btn{width:32px;height:32px;border-radius:8px;font-size:16px;margin-left:auto}
 .event{text-align:center;padding:16px}
 .event-icon{width:64px;height:64px;margin:0 auto 12px;background:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;border:2px solid var(--border)}
 .event-icon.enemy{border-color:var(--bad)}.event-icon.res{border-color:var(--ok)}.event-icon.player{border-color:var(--xp)}
@@ -116,46 +117,92 @@ body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);max
 <div class="gold">💰<span id="hdrGold">150</span></div>
 </div>
 <div class="main">
-<div class="screen active" id="sWorld"></div>
+<div id="travelBar" class="travel-bar" style="display:none">
+<div class="card-head" style="margin:0"><h4 id="travelText">Путешествие...</h4><span id="travelTime" style="font-size:11px;color:var(--dim)"></span></div>
+<div class="travel-prog"><div class="travel-prog-fill" id="travelProg"></div></div>
+</div>
+<!-- CITY SCREEN -->
+<div class="screen" id="sCity">
+<div class="card">
+<div class="card-head"><div class="card-title">🏰 Город</div><button class="btn btn-s map-btn" onclick="openMap()">🗺️</button></div>
+<div class="tabs" id="cityTabs">
+<button class="tab active" onclick="cityTab('craft')">Крафт</button>
+<button class="tab" onclick="cityTab('bank')">Банк</button>
+<button class="tab" onclick="cityTab('auc')">Аукцион</button>
+</div>
+<div id="cityContent"></div>
+<button class="btn btn-p" style="margin-top:12px" onclick="leaveCity()">🚶 В путь</button>
+</div>
+</div>
+<!-- WORLD SCREEN -->
+<div class="screen" id="sWorld">
+<div class="card">
+<div class="card-head">
+<div><span style="font-weight:700" id="wLocName"></span> <span class="badge" id="wLocPvp"></span></div>
+<div style="display:flex;align-items:center;gap:8px">
+<span style="font-size:11px;color:var(--dim)" id="wLocTier"></span>
+<button class="btn btn-s map-btn" onclick="openMap()">🗺️</button>
+</div>
+</div>
+<div class="chunk-bar" id="chunkBar"></div>
+<div class="chunk-desc" id="chunkDesc"></div>
+<div id="stepArea"></div>
+<div id="endLocArea" style="display:none"></div>
+</div>
+<div class="card event" id="eventCard"></div>
+<div class="card combat" id="combatCard" style="display:none">
+<div class="fighter"><div class="fighter-ava" id="cEnemyAva"></div><div class="fighter-info"><div class="fighter-name" id="cEnemyName"></div><div class="fighter-hp"><div class="fighter-hp-fill" id="cEnemyHp"></div><span class="fighter-hp-text" id="cEnemyHpTxt"></span></div></div></div>
+<div class="turn-ind" id="turnInd"></div>
+<div class="fighter"><div class="fighter-ava">👤</div><div class="fighter-info"><div class="fighter-name">Вы</div><div class="fighter-hp"><div class="fighter-hp-fill" id="cPlayerHp"></div><span class="fighter-hp-text" id="cPlayerHpTxt"></span></div></div></div>
+<div class="abilities" id="abilGrid"></div>
+<div class="log" id="combatLog"></div>
+</div>
+</div>
+<!-- MAP SCREEN -->
 <div class="screen" id="sMap"><div class="card"><div class="card-title">Карта мира</div><div id="locList"></div></div></div>
+<!-- INV SCREEN -->
 <div class="screen" id="sInv">
 <div class="card"><div class="card-title">Экипировка</div><div class="eq-panel" id="eqPanel"></div></div>
 <div class="card"><div class="card-title">Сумка</div>
 <div class="weight-bar"><div class="weight-bar-fill" id="weightFill"></div><div class="weight-bar-marks" id="weightMarks"></div></div>
-<div class="weight-info"><span id="weightText">0/40</span><span class="weight-status" id="weightStatus">Норма</span></div>
+<div class="weight-info"><span id="weightText"></span><span class="weight-status" id="weightStatus"></span></div>
 <div class="inv-grid" id="invGrid"></div></div>
 </div>
+<!-- MAST SCREEN -->
 <div class="screen" id="sMast"><div class="card"><div class="card-title">Мастерство</div><div id="mastList"></div></div></div>
 </div>
 <div class="nav">
 <button class="nav-item" onclick="nav('Inv')">🎒<span>Сумка</span></button>
-<button class="nav-item center" id="navCenter" onclick="nav('World')">🏰<span>Город</span></button>
+<button class="nav-item center" id="navCenter" onclick="nav('Center')">🏰<span>Город</span></button>
 <button class="nav-item" onclick="nav('Mast')">📊<span>Скилы</span></button>
 </div>
 <div class="modal" id="modal"><div class="modal-box"><div class="modal-head"><div class="modal-title" id="modTitle"></div><button class="modal-close" onclick="closeMod()">×</button></div><div id="modContent"></div></div></div>
 <script>
+// CONFIG
 const CFG={stepTimes:{normal:1000,medium:4000,heavy:10000},cityTeleport:3000,
 chunkDescs:['Тропа петляет между холмами...','Вдали слышен шум ручья...','Под ногами хрустит гравий...','Солнце пробивается сквозь кроны...','Воздух пахнет сыростью...','Птицы замолкли...','Что-то шуршит в кустах...']};
 
 const ITEMS={
 wood:{name:'Дерево',icon:'🪵',weight:1,stack:20,type:'res'},metal:{name:'Руда',icon:'🧱',weight:2,stack:15,type:'res'},
 cloth:{name:'Ткань',icon:'🧶',weight:.5,stack:30,type:'res'},leather:{name:'Кожа',icon:'🦴',weight:1,stack:20,type:'res'},
-pickaxe:{name:'Кирка',icon:'⛏️',weight:3,stack:1,type:'tool',gathers:'metal'},axe:{name:'Топор',icon:'🪓',weight:3,stack:1,type:'tool',gathers:'wood'},
-sickle:{name:'Серп',icon:'🌾',weight:2,stack:1,type:'tool',gathers:'cloth'},skinning_knife:{name:'Нож',icon:'🔪',weight:1,stack:1,type:'tool',gathers:'leather'},
-wooden_sword:{name:'Дерев.меч',icon:'🗡️',weight:2,stack:1,slot:'mainHand',ab:['slash','block'],cat:'sword'},
-iron_sword:{name:'Жел.меч',icon:'⚔️',weight:3,stack:1,slot:'mainHand',ab:['slash','parry'],cat:'sword'},
-wooden_bow:{name:'Лук',icon:'🏹',weight:2,stack:1,slot:'mainHand',ab:['shoot','multishot'],cat:'bow',two:1},
-wooden_staff:{name:'Посох',icon:'🪄',weight:2,stack:1,slot:'mainHand',ab:['fireball','heal'],cat:'staff',two:1},
-wooden_shield:{name:'Щит',icon:'🛡️',weight:4,stack:1,slot:'offHand',ab:['shieldblock'],cat:'shield'},
-cloth_robe:{name:'Роба',icon:'👘',weight:2,stack:1,slot:'chest',ab:['mana_shield'],cat:'cloth'},
-leather_armor:{name:'Кож.броня',icon:'🦺',weight:5,stack:1,slot:'chest',ab:['dodge'],cat:'leather'},
-plate_armor:{name:'Латы',icon:'🛡️',weight:10,stack:1,slot:'chest',ab:['fortify'],cat:'plate'},
-cloth_boots:{name:'Тк.сапоги',icon:'👟',weight:1,stack:1,slot:'boots',ab:['blink'],cat:'cloth'},
-leather_boots:{name:'Кож.сапоги',icon:'🥾',weight:2,stack:1,slot:'boots',ab:['dash'],cat:'leather'},
-plate_boots:{name:'Лат.сапоги',icon:'🦶',weight:5,stack:1,slot:'boots',ab:['stomp'],cat:'plate'},
-basic_bag:{name:'Простая сумка',icon:'🎒',weight:1,stack:1,slot:'bag',slots:12,wNorm:15,wMed:25,wHeavy:35,wMax:45},
-large_bag:{name:'Большая сумка',icon:'🎒',weight:2,stack:1,slot:'bag',slots:16,wNorm:20,wMed:35,wHeavy:50,wMax:60},
-basic_cloak:{name:'Плащ',icon:'🧥',weight:1,stack:1,slot:'cloak',ab:[]}
+pickaxe:{name:'Кирка',icon:'⛏️',weight:3,stack:1,type:'tool',gathers:'metal',desc:'Добыча руды'},
+axe:{name:'Топор',icon:'🪓',weight:3,stack:1,type:'tool',gathers:'wood',desc:'Рубка дерева'},
+sickle:{name:'Серп',icon:'🌾',weight:2,stack:1,type:'tool',gathers:'cloth',desc:'Сбор растений'},
+skinning_knife:{name:'Нож',icon:'🔪',weight:1,stack:1,type:'tool',gathers:'leather',desc:'Снятие шкур'},
+wooden_sword:{name:'Дерев.меч',icon:'🗡️',weight:2,stack:1,slot:'mainHand',ab:['slash','block'],cat:'sword',desc:'Слабый меч',dmg:5},
+iron_sword:{name:'Жел.меч',icon:'⚔️',weight:3,stack:1,slot:'mainHand',ab:['slash','parry'],cat:'sword',desc:'Острый меч',dmg:10},
+wooden_bow:{name:'Лук',icon:'🏹',weight:2,stack:1,slot:'mainHand',ab:['shoot','multishot'],cat:'bow',two:1,desc:'Для охоты',dmg:8},
+wooden_staff:{name:'Посох',icon:'🪄',weight:2,stack:1,slot:'mainHand',ab:['fireball','heal'],cat:'staff',two:1,desc:'Магический',dmg:12},
+wooden_shield:{name:'Щит',icon:'🛡️',weight:4,stack:1,slot:'offHand',ab:['shieldblock'],cat:'shield',desc:'Защита',def:5},
+cloth_robe:{name:'Роба',icon:'👘',weight:2,stack:1,slot:'chest',ab:['mana_shield'],cat:'cloth',desc:'Легкая',def:2},
+leather_armor:{name:'Кож.броня',icon:'🦺',weight:5,stack:1,slot:'chest',ab:['dodge'],cat:'leather',desc:'Средняя',def:5},
+plate_armor:{name:'Латы',icon:'🛡️',weight:10,stack:1,slot:'chest',ab:['fortify'],cat:'plate',desc:'Тяжелая',def:10},
+cloth_boots:{name:'Тк.сапоги',icon:'👟',weight:1,stack:1,slot:'boots',ab:['blink'],cat:'cloth',desc:'Быстрые',def:1},
+leather_boots:{name:'Кож.сапоги',icon:'🥾',weight:2,stack:1,slot:'boots',ab:['dash'],cat:'leather',desc:'Прочные',def:2},
+plate_boots:{name:'Лат.сапоги',icon:'🦶',weight:5,stack:1,slot:'boots',ab:['stomp'],cat:'plate',desc:'Железные',def:4},
+basic_bag:{name:'Простая сумка',icon:'🎒',weight:1,stack:1,slot:'bag',slots:12,wNorm:15,wMed:25,wHeavy:35,wMax:45,desc:'12 слотов'},
+large_bag:{name:'Большая сумка',icon:'🎒',weight:2,stack:1,slot:'bag',slots:16,wNorm:20,wMed:35,wHeavy:50,wMax:60,desc:'16 слотов'},
+basic_cloak:{name:'Плащ',icon:'🧥',weight:1,stack:1,slot:'cloak',ab:[],desc:'От ветра'}
 };
 const ABILS={punch:{name:'Удар',icon:'👊',dmg:5,desc:'5'},wait:{name:'Ждать',icon:'⏳',heal:5,desc:'+5'},
 slash:{name:'Рубящий',icon:'⚔️',dmg:15,desc:'15'},block:{name:'Блок',icon:'🛡️',def:20,desc:'🛡20'},
@@ -176,18 +223,20 @@ meadow:{name:'Луга',icon:'🌿',chunks:10,tier:1,pvp:'request',enemies:['sli
 forest:{name:'Лес',icon:'🌲',chunks:12,tier:2,pvp:'request',enemies:['wolf','bear'],res:['wood','leather'],next:'highlands'},
 highlands:{name:'Высокогорье',icon:'⛰️',chunks:15,tier:3,pvp:'open',enemies:['golem','harpy'],res:['metal','leather'],next:'swamp'},
 swamp:{name:'Болота',icon:'🐊',chunks:10,tier:2,pvp:'open',enemies:['lizard','witch'],res:['cloth','leather']}};
-const ENEMIES={slime:{name:'Слизень',icon:'🟢',hp:30,dmg:5,loot:['cloth']},wolf:{name:'Волк',icon:'🐺',hp:50,dmg:10,loot:['leather']},
+const ENEMIES={slime:{name:'Слизень',icon:'🟢',hp:30,dmg:5,loot:[]},wolf:{name:'Волк',icon:'🐺',hp:50,dmg:10,loot:['leather']},
 bear:{name:'Медведь',icon:'🐻',hp:80,dmg:15,loot:['leather','leather']},golem:{name:'Голем',icon:'🗿',hp:120,dmg:18,loot:['metal','metal']},
-harpy:{name:'Гарпия',icon:'🦅',hp:60,dmg:20,loot:['cloth']},lizard:{name:'Ящер',icon:'🦎',hp:70,dmg:14,loot:['leather']},
-witch:{name:'Ведьма',icon:'🧙‍♀️',hp:45,dmg:25,loot:['cloth','cloth']}};
+harpy:{name:'Гарпия',icon:'🦅',hp:60,dmg:20,loot:[]},lizard:{name:'Ящер',icon:'🦎',hp:70,dmg:14,loot:['leather']},
+witch:{name:'Ведьма',icon:'🧙‍♀️',hp:45,dmg:25,loot:[]}};
 const PLAYERS=[{name:'Рыцарь_42',hp:80,dmg:15,loot:['iron_sword']},{name:'MagicUser',hp:60,dmg:20,loot:['wooden_staff']}];
 
-const G={p:{hp:100,maxHp:100,gold:150,
-inv:[{id:'wooden_sword',qty:1,_idx:0},{id:'leather_armor',qty:1,_idx:1},{id:'basic_bag',qty:1,_idx:2},{id:'pickaxe',qty:1,_idx:3},{id:'axe',qty:1,_idx:4},{id:'sickle',qty:1,_idx:5},{id:'skinning_knife',qty:1,_idx:6},{id:'wood',qty:5,_idx:7},{id:'metal',qty:3,_idx:8},{id:'cloth',qty:2,_idx:9},{id:'leather',qty:2,_idx:10}],
-eq:{mainHand:null,offHand:null,chest:null,boots:null,bag:2,cloak:null},
-bank:[],mast:{sword:{lv:3,xp:45},bow:{lv:1,xp:0},staff:{lv:2,xp:80},cloth:{lv:1,xp:20},leather:{lv:2,xp:10},plate:{lv:1,xp:0}}},
-loc:'city',chunk:0,unlocked:['city','meadow'],combat:null,event:null,turn:'player',stepping:false,traveling:false};
-let nextIdx=11;
+// STATE
+let nextUid=1;
+const G={
+  p:{hp:100,maxHp:100,gold:150,inv:[],eq:{mainHand:null,offHand:null,chest:null,boots:null,bag:null,cloak:null},bank:[],mast:{sword:{lv:3,xp:45},bow:{lv:1,xp:0},staff:{lv:2,xp:80},cloth:{lv:1,xp:20},leather:{lv:2,xp:10},plate:{lv:1,xp:0}}},
+  loc:'city',chunk:0,unlocked:['city','meadow'],combat:null,event:null,turn:'player',stepping:false,traveling:false
+};
+// Initial items list (bag must be first to avoid overflow logic during manual init)
+const initList=[{id:'wooden_sword',qty:1},{id:'leather_armor',qty:1},{id:'pickaxe',qty:1},{id:'axe',qty:1},{id:'sickle',qty:1},{id:'skinning_knife',qty:1},{id:'wood',qty:5},{id:'metal',qty:3},{id:'cloth',qty:2},{id:'leather',qty:2}];
 
 let AUC=[{id:1,item:'iron_sword',price:100,seller:'Торговец'},{id:2,item:'plate_armor',price:200,seller:'Кузнец'},{id:3,item:'wood',price:5,seller:'Лесник'},{id:4,item:'metal',price:10,seller:'Шахтёр'}];
 let aucId=5,aucFilter='all',aucSort='price',aucSearch='',aucExec=false;
@@ -195,276 +244,205 @@ let stepTimer=null,gatherTimer=null,travelTimer=null;
 const $=id=>document.getElementById(id);
 const updHdr=()=>{$('hdrHp').style.width=(G.p.hp/G.p.maxHp*100)+'%';$('hdrGold').textContent=G.p.gold};
 
-// INV HELPERS
-function getBagItem(){const idx=G.p.eq.bag;if(idx===null||idx===undefined)return null;const slot=G.p.inv.find(s=>s&&s._idx===idx);return slot?ITEMS[slot.id]:null}
+// UTILS
+function getBagItem(){const uid=G.p.eq.bag;if(!uid)return null;const s=G.p.inv.find(i=>i.uid===uid);return s?ITEMS[s.id]:null}
 function getSlots(){const b=getBagItem();return b?b.slots:4}
-function getTotalWeight(){return G.p.inv.reduce((s,i)=>s+(i?ITEMS[i.id].weight*i.qty:0),0)}
-function getWeightStage(){const b=getBagItem();if(!b)return'over';const w=getTotalWeight();if(w<=b.wNorm)return'normal';if(w<=b.wMed)return'medium';if(w<=b.wHeavy)return'heavy';return'over'}
+function getTotalWeight(){
+  let w=0;
+  G.p.inv.forEach(i=>{
+    const it=ITEMS[i.id];
+    if(isEquippedUid(i.uid)) w+=it.weight*i.qty*0.05; // 5% weight for equipped
+    else w+=it.weight*i.qty;
+  });
+  return w;
+}
+function getWeightStage(){
+  const b=getBagItem();if(!b)return'over';
+  const w=getTotalWeight();
+  if(w<=b.wNorm)return'normal';
+  if(w<=b.wMed)return'medium';
+  if(w<=b.wHeavy)return'heavy';
+  return'over';
+}
 function getStepTime(){const s=getWeightStage();return s==='over'?Infinity:CFG.stepTimes[s]}
-function hasTool(res){const t=Object.entries(ITEMS).find(([k,v])=>v.gathers===res);return t&&G.p.inv.some(i=>i&&i.id===t[0])}
-function addToInv(id,qty=1){const it=ITEMS[id];for(let s of G.p.inv){if(s&&s.id===id&&s.qty<it.stack){const add=Math.min(qty,it.stack-s.qty);s.qty+=add;qty-=add;if(qty<=0)return true}}const slots=getSlots();while(qty>0&&G.p.inv.length<slots){const add=Math.min(qty,it.stack);G.p.inv.push({id,qty:add,_idx:nextIdx++});qty-=add}return qty<=0}
-function countItem(id){return G.p.inv.reduce((s,i)=>s+(i&&i.id===id?i.qty:0),0)}
-function removeItem(id,qty=1){for(let i=G.p.inv.length-1;i>=0&&qty>0;i--){if(G.p.inv[i]&&G.p.inv[i].id===id){const rem=Math.min(qty,G.p.inv[i].qty);G.p.inv[i].qty-=rem;qty-=rem;if(G.p.inv[i].qty<=0)G.p.inv.splice(i,1)}}}
-function isEquippedIdx(idx){return Object.values(G.p.eq).includes(idx)}
+function hasTool(res){const t=Object.entries(ITEMS).find(([k,v])=>v.gathers===res);return t&&G.p.inv.some(i=>i.id===t[0])}
+function addToInv(id,qty=1){
+  const it=ITEMS[id];
+  for(let s of G.p.inv){if(s.id===id&&s.qty<it.stack){const add=Math.min(qty,it.stack-s.qty);s.qty+=add;qty-=add;if(qty<=0)return true}}
+  // Check capacity - only counts unequipped items for slot limit? Usually MMOs count slots. Let's count unequipped stacks.
+  const slots=getSlots();
+  const occupied=G.p.inv.filter(i=>!isEquippedUid(i.uid)).length;
+  
+  if(occupied<slots || qty<=0){
+     while(qty>0){
+       if(G.p.inv.filter(i=>!isEquippedUid(i.uid)).length >= slots) break; 
+       const add=Math.min(qty,it.stack);G.p.inv.push({id,qty:add,uid:nextUid++});qty-=add
+     }
+  }
+  return qty<=0;
+}
+function countItem(id){return G.p.inv.reduce((s,i)=>s+(i.id===id?i.qty:0),0)}
+function removeItem(id,qty=1){for(let i=G.p.inv.length-1;i>=0&&qty>0;i--){if(G.p.inv[i].id===id){const rem=Math.min(qty,G.p.inv[i].qty);G.p.inv[i].qty-=rem;qty-=rem;if(G.p.inv[i].qty<=0)G.p.inv.splice(i,1)}}}
+function isEquippedUid(uid){return Object.values(G.p.eq).includes(uid)}
 
 // NAV
 function nav(s){
   document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
-  $('s'+s).classList.add('active');
-  if(s==='Inv'){renderInv();document.querySelectorAll('.nav-item')[0].classList.add('active')}
-  else if(s==='Map'){renderLocList();$('navCenter').classList.add('active')}
-  else if(s==='Mast'){renderMast();document.querySelectorAll('.nav-item')[2].classList.add('active')}
-  else if(s==='World'){renderWorld();$('navCenter').classList.add('active')}
+  if(s==='Inv'){
+    $('sInv').classList.add('active');
+    document.querySelectorAll('.nav-item')[0].classList.add('active');
+    renderInv();
+  }else if(s==='Mast'){
+    $('sMast').classList.add('active');
+    document.querySelectorAll('.nav-item')[2].classList.add('active');
+    renderMast();
+  }else if(s==='Center'){
+    if(LOCS[G.loc].isCity) renderCity(); else renderWorld();
+    $('navCenter').classList.add('active');
+  }else if(s==='Map'){
+    $('sMap').classList.add('active');
+    $('navCenter').classList.add('active');
+    renderLocList();
+  }
 }
 function updateNavCenter(){
   const inCity=LOCS[G.loc].isCity;
   $('navCenter').innerHTML=(inCity?'🏰':'🌍')+'<span>'+(inCity?'Город':'Мир')+'</span>';
 }
+function openMap(){nav('Map')}
+
+// CITY
+function renderCity(){
+  $('sCity').classList.add('active');
+  $('sWorld').classList.remove('active');
+  updateNavCenter();
+  cityTab('craft');
+}
+function leaveCity(){
+  const first=LOC_ORDER.find(k=>!LOCS[k].isCity);
+  if(first) fastTravel(first);
+}
 
 // WORLD
 function renderWorld(){
+  $('sCity').classList.remove('active');
+  $('sWorld').classList.add('active');
   updateNavCenter();
   const L=LOCS[G.loc];
-  let h='';
   
-  // Travel progress bar (if traveling)
-  if(G.traveling){
-    h+=`<div class="travel-bar" id="travelBar"><h4 id="travelText">Путешествие...</h4><div class="travel-prog"><div class="travel-prog-fill" id="travelProg"></div></div><p style="font-size:11px;color:var(--dim);margin-top:4px" id="travelTime"></p></div>`;
-  }
+  // Update header info
+  $('wLocName').textContent=L.name;
+  $('wLocTier').textContent='Ур.'+L.tier;
+  const b=$('wLocPvp');
+  b.className='badge '+(L.pvp==='safe'?'badge-ok':L.pvp==='request'?'badge-warn':'badge-bad');
+  b.textContent=L.pvp==='safe'?'Безопасно':L.pvp==='request'?'PvP запрос':'⚠️ PvP';
+
+  // Chunks
+  let dots='';for(let i=0;i<L.chunks;i++){let c='chunk-dot';if(i<G.chunk)c+=' done';else if(i===G.chunk)c+=' current';dots+=`<div class="${c}"></div>`}
+  $('chunkBar').innerHTML=dots;
+  $('chunkDesc').textContent=CFG.chunkDescs[G.chunk%CFG.chunkDescs.length];
+
+  // Logic for step/end
+  const atEnd=G.chunk>=L.chunks-1;
+  const stage=getWeightStage();
   
-  if(L.isCity){
-    // CITY VIEW
-    h+=`<div class="card">
-      <div class="card-title">🏰 ${L.name}</div>
-      <button class="btn btn-s map-btn btn-sm" onclick="nav('Map')">🗺️</button>
-      <div class="tabs" id="cityTabs">
-        <button class="tab active" onclick="cityTab('craft')">Крафт</button>
-        <button class="tab" onclick="cityTab('bank')">Банк</button>
-        <button class="tab" onclick="cityTab('auc')">Аукцион</button>
-      </div>
-      <div id="cityContent"></div>
-      <button class="btn btn-p" style="margin-top:12px" onclick="leaveCity()">🚶 В путь</button>
-    </div>`;
+  if(G.combat){
+    $('combatCard').style.display='block';
+    $('eventCard').style.display='none';
+    $('stepArea').innerHTML=`<button class="btn btn-w step-btn" onclick="tryFlee()">🏃 Убежать</button><div class="step-time">Шанс 50%</div>`;
+    updCombat(); // Update visual HP bars
   }else{
-    // WORLD VIEW
-    const stage=getWeightStage(),atEnd=G.chunk>=L.chunks-1,inCombat=!!G.combat;
-    h+=`<div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div><span style="font-weight:700">${L.name}</span> 
-        <span class="badge badge-${L.pvp==='safe'?'ok':L.pvp==='request'?'warn':'bad'}">${L.pvp==='safe'?'Безопасно':L.pvp==='request'?'PvP запрос':'⚠️PvP'}</span></div>
-        <span style="font-size:11px;color:var(--dim)">Ур.${L.tier}</span>
-      </div>
-      <button class="btn btn-s map-btn btn-sm" onclick="nav('Map')">🗺️</button>
-      <div class="chunk-bar">${Array(L.chunks).fill(0).map((_,i)=>`<div class="chunk-dot${i<G.chunk?' done':i===G.chunk?' current':''}"></div>`).join('')}</div>
-      <div class="chunk-desc">${CFG.chunkDescs[G.chunk%CFG.chunkDescs.length]}</div>`;
+    $('combatCard').style.display='none';
+    $('eventCard').style.display='block';
     
     if(atEnd){
+      $('stepArea').style.display='none';
+      $('endLocArea').style.display='block';
       const next=L.next;
-      h+=`<p style="text-align:center;color:var(--ok);margin-bottom:8px">Вы дошли до конца!</p>
-        <div class="end-loc">
-          <button class="btn btn-s" onclick="restartLoc()">🔄 Заново</button>
-          <button class="btn btn-p" ${next?`onclick="goNextLoc()"`:'disabled'}>➡️ ${next?LOCS[next].name:'Конец'}</button>
-        </div>`;
+      $('endLocArea').innerHTML=`<p style="text-align:center;color:var(--ok);margin-bottom:8px">Вы дошли до конца!</p><div class="end-loc"><button class="btn btn-s" onclick="restartLoc()">🔄 Заново</button><button class="btn btn-p" ${next?`onclick="goNextLoc()"`:'disabled'}>➡️ ${next?LOCS[next].name:'Конец'}</button></div>`;
     }else{
-      let btnClass='btn-p',btnText='🚶 Сделать шаг',timeText=`~${getStepTime()/1000} сек`;
-      if(stage==='over'){btnClass='btn-d';btnText='⚠️ Перевес!';timeText='Сбросьте вес'}
-      else if(inCombat){btnClass='btn-w';btnText='🏃 Убежать';timeText='Шанс 50%'}
-      const canStep=stage!=='over'&&!G.traveling;
-      h+=`<button class="btn ${btnClass} step-btn" id="stepBtn" onclick="doStep()" ${canStep||inCombat?'':'disabled'}>
-        <span class="step-prog" id="stepProg"></span><span>${btnText}</span>
-      </button>
-      <div class="step-time">${timeText}</div>`;
+      $('endLocArea').style.display='none';
+      $('stepArea').style.display='block';
+      
+      let btnClass='btn-p', btnText='🚶 Сделать шаг', timeText=`~${getStepTime()/1000} сек`;
+      let disabled=false;
+      
+      if(stage==='over'){
+        btnClass='btn-d'; btnText='⚠️ Перевес!'; timeText='Сбросьте вес'; disabled=true;
+      }
+      
+      $('stepArea').innerHTML=`<button class="btn ${btnClass} step-btn" id="stepBtn" onclick="doStep()" ${disabled?'disabled':''}><span class="step-prog" id="stepProg"></span>${btnText}</button><div class="step-time">${timeText}</div>`;
     }
-    h+=`</div>`;
-    
-    // Event card
-    h+=`<div class="card event" id="eventCard"></div>`;
-    
-    // Combat card
-    h+=`<div class="card combat" id="combatCard" style="display:none">
-      <div class="fighter"><div class="fighter-ava" id="cEnemyAva">🐺</div><div class="fighter-info"><div class="fighter-name" id="cEnemyName">Враг</div><div class="fighter-hp"><div class="fighter-hp-fill" id="cEnemyHp"></div><span class="fighter-hp-text" id="cEnemyHpTxt"></span></div></div></div>
-      <div class="turn-ind" id="turnInd">Ваш ход</div>
-      <div class="fighter"><div class="fighter-ava">👤</div><div class="fighter-info"><div class="fighter-name">Вы</div><div class="fighter-hp"><div class="fighter-hp-fill" id="cPlayerHp"></div><span class="fighter-hp-text" id="cPlayerHpTxt"></span></div></div></div>
-      <div class="abilities" id="abilGrid"></div>
-      <div class="log" id="combatLog"></div>
-    </div>`;
-  }
-  
-  $('sWorld').innerHTML=h;
-  
-  if(L.isCity){
-    cityTab('craft');
-  }else{
-    genEvent();
   }
 }
 
-function leaveCity(){
-  const first=LOC_ORDER.find(k=>!LOCS[k].isCity);
-  if(first){
-    if(!G.unlocked.includes(first))G.unlocked.push(first);
-    G.loc=first;
-    G.chunk=0;
-    nav('World');
-  }
-}
 function restartLoc(){G.chunk=0;renderWorld();genEvent()}
 function goNextLoc(){
-  const L=LOCS[G.loc];
-  if(!L.next)return;
+  const L=LOCS[G.loc];if(!L.next)return;
   if(!G.unlocked.includes(L.next))G.unlocked.push(L.next);
-  G.loc=L.next;
-  G.chunk=0;
-  renderWorld();
+  G.loc=L.next;G.chunk=0;renderWorld();genEvent();
 }
 
 function doStep(){
-  if(G.traveling)return;
-  if(G.combat){tryFlee();return}
-  if(G.stepping||getWeightStage()==='over')return;
+  if(G.traveling||G.combat||G.stepping)return;
   G.stepping=true;
   const total=getStepTime();
   let prog=0;
-  const btn=$('stepBtn');
-  if(btn)btn.disabled=true;
+  $('stepBtn').disabled=true;
   stepTimer=setInterval(()=>{
     prog+=50;
-    const progEl=$('stepProg');
-    if(progEl)progEl.style.width=(prog/total*100)+'%';
+    const el=$('stepProg');if(el)el.style.width=(prog/total*100)+'%';
     if(prog>=total){
-      clearInterval(stepTimer);
-      G.stepping=false;
+      clearInterval(stepTimer);G.stepping=false;
       G.chunk++;
       renderWorld();
+      genEvent();
     }
   },50);
 }
 
-function tryFlee(){
-  if(Math.random()<.5){
-    G.combat=null;
-    renderWorld();
-    setTimeout(()=>{
-      const ec=$('eventCard');
-      if(ec)ec.innerHTML=`<div class="event-icon">🏃</div><div class="event-title">Сбежали!</div>`;
-    },10);
-  }else{
-    const log=$('combatLog');
-    if(log)log.innerHTML+='<div class="log-dmg">Не удалось сбежать!</div>';
-  }
-}
-
-// FAST TRAVEL
-function fastTravel(target){
-  if(G.traveling||G.combat)return;
-  if(!G.unlocked.includes(target))return;
-  if(target===G.loc){closeMod();return}
-  closeMod();
-  
-  let totalTime;
-  if(target==='city'){
-    totalTime=CFG.cityTeleport;
-  }else{
-    const curL=LOCS[G.loc];
-    let chunks=curL.isCity?0:curL.chunks-G.chunk-1;
-    const curIdx=LOC_ORDER.indexOf(G.loc),tgtIdx=LOC_ORDER.indexOf(target);
-    if(curIdx<tgtIdx)for(let i=curIdx+1;i<tgtIdx;i++)chunks+=LOCS[LOC_ORDER[i]].chunks;
-    else for(let i=curIdx-1;i>=tgtIdx;i--)chunks+=LOCS[LOC_ORDER[i]].chunks;
-    chunks=Math.max(1,chunks);
-    const st=getStepTime();
-    if(st===Infinity){alert('Перевес!');return}
-    totalTime=chunks*st;
-  }
-  
-  G.traveling=true;
-  G.loc=target;
-  G.chunk=0;
-  renderWorld();
-  
-  let elapsed=0;
-  travelTimer=setInterval(()=>{
-    elapsed+=100;
-    const progEl=$('travelProg'),timeEl=$('travelTime'),textEl=$('travelText');
-    if(progEl)progEl.style.width=(elapsed/totalTime*100)+'%';
-    if(timeEl)timeEl.textContent=Math.ceil((totalTime-elapsed)/1000)+' сек';
-    if(textEl)textEl.textContent='Путь: '+LOCS[target].name;
-    if(elapsed>=totalTime){
-      clearInterval(travelTimer);
-      G.traveling=false;
-      renderWorld();
-    }
-  },100);
-}
-
 // EVENTS
 function genEvent(){
-  const L=LOCS[G.loc],c=$('eventCard');
-  if(!c||L.isCity)return;
+  const L=LOCS[G.loc],c=$('eventCard');if(!c)return;
   G.event=null;
   const r=Math.random();
   
   if(r<.3&&L.enemies?.length){
     const ek=L.enemies[Math.floor(Math.random()*L.enemies.length)],e=ENEMIES[ek];
     G.event={type:'enemy',key:ek,data:e};
-    c.innerHTML=`<div class="event-icon enemy">${e.icon}</div><div class="event-title">${e.name}</div>
-      <div class="event-stats"><span style="color:var(--hp)">❤️${e.hp}</span><span style="color:var(--bad)">⚔️${e.dmg}</span></div>
-      <div class="event-acts"><button class="btn btn-p btn-sm" onclick="startCombat()">⚔️ Бой</button></div>`;
+    c.innerHTML=`<div class="event-icon enemy">${e.icon}</div><div class="event-title">${e.name}</div><div class="event-stats"><span style="color:var(--hp)">❤️${e.hp}</span><span style="color:var(--bad)">⚔️${e.dmg}</span></div><div class="event-acts"><button class="btn btn-p btn-sm" onclick="startCombat()">⚔️ Бой</button></div>`;
   }else if(r<.55&&L.res?.length){
     const rt=L.res[Math.floor(Math.random()*L.res.length)];
-    G.event={type:'res',rt,left:4};
-    renderGather();
+    G.event={type:'res',rt,left:4};renderGather();
   }else if(r<.7&&L.pvp!=='safe'){
     const pl=PLAYERS[Math.floor(Math.random()*PLAYERS.length)];
     G.event={type:'player',data:pl};
-    c.innerHTML=`<div class="event-icon player">👤</div><div class="event-title">${pl.name}</div>
-      <div class="event-acts"><button class="btn btn-s btn-sm" onclick="wave()">👋</button>
-      ${L.pvp==='open'?`<button class="btn btn-d btn-sm" onclick="attackPlayer()">⚔️</button>`:''}</div>`;
-  }else{
-    c.innerHTML=`<div class="event-icon">🌿</div><div class="event-title">Пусто</div>`;
-  }
+    c.innerHTML=`<div class="event-icon player">👤</div><div class="event-title">${pl.name}</div><div class="event-acts"><button class="btn btn-s btn-sm" onclick="wave()">👋</button>${L.pvp==='open'?`<button class="btn btn-d btn-sm" onclick="attackPlayer()">⚔️</button>`:''}</div>`;
+  }else c.innerHTML=`<div class="event-icon">🌿</div><div class="event-title">Пусто</div>`;
 }
 
 function renderGather(){
-  const e=G.event,c=$('eventCard');
-  if(!e||e.type!=='res'||!c)return;
+  const e=G.event;if(!e||e.type!=='res')return;
   const rt=e.rt,has=hasTool(rt),it=ITEMS[rt];
-  c.innerHTML=`<div class="event-icon res">${it.icon}</div><div class="event-title">${it.name} (${e.left}/4)</div>
-    ${has?`<button class="btn btn-p" onmousedown="startGather()" onmouseup="stopGather()" onmouseleave="stopGather()" ontouchstart="startGather()" ontouchend="stopGather()">Удерживайте</button>
-    <div class="gather-prog"><div class="gather-prog-fill" id="gatherProg"></div></div>`
-    :`<p style="color:var(--bad);margin:8px">Нужен инструмент!</p>`}`;
+  $('eventCard').innerHTML=`<div class="event-icon res">${it.icon}</div><div class="event-title">${it.name} (${e.left}/4)</div>${has?`<button class="btn btn-p" onmousedown="startGather()" onmouseup="stopGather()" onmouseleave="stopGather()" ontouchstart="startGather()" ontouchend="stopGather()">Удерживайте</button><div class="gather-prog"><div class="gather-prog-fill" id="gatherProg"></div></div>`:`<p style="color:var(--bad);margin:8px">Нужен инструмент!</p>`}`;
 }
 
 let gatherProg=0;
 function startGather(){
-  if(gatherTimer||!G.event)return;
-  gatherProg=100;
+  if(gatherTimer||!G.event)return;gatherProg=100;
   gatherTimer=setInterval(()=>{
-    gatherProg-=5;
-    const pg=$('gatherProg');
-    if(pg)pg.style.width=gatherProg+'%';
+    gatherProg-=5;$('gatherProg').style.width=gatherProg+'%';
     if(gatherProg<=0){
-      if(!addToInv(G.event.rt,1)){
-        stopGather();
-        const c=$('eventCard');
-        if(c)c.innerHTML+=`<p style="color:var(--bad)">Сумка полна!</p>`;
-        return;
-      }
+      if(!addToInv(G.event.rt,1)){stopGather();$('eventCard').innerHTML+=`<p style="color:var(--bad)">Сумка полна!</p>`;return}
       G.event.left--;
-      if(G.event.left<=0){
-        stopGather();
-        const c=$('eventCard');
-        if(c)c.innerHTML=`<div class="event-icon res">${ITEMS[G.event.rt].icon}</div><div class="event-title">Собрано!</div>`;
-        G.event=null;
-      }else{
-        gatherProg=100;
-        renderGather();
-      }
+      if(G.event.left<=0){stopGather();$('eventCard').innerHTML=`<div class="event-icon res">${ITEMS[G.event.rt].icon}</div><div class="event-title">Собрано!</div>`;G.event=null}
+      else{gatherProg=100;renderGather()}
     }
   },50);
 }
 function stopGather(){if(gatherTimer){clearInterval(gatherTimer);gatherTimer=null}}
-function wave(){const c=$('eventCard');if(c)c.innerHTML+='<p style="color:var(--dim);margin-top:8px">👋</p>'}
+function wave(){$('eventCard').innerHTML+='<p style="color:var(--dim);margin-top:8px">👋</p>'}
 function attackPlayer(){if(!G.event?.data)return;const pl=G.event.data;G.combat={...pl,hp:pl.hp,maxHp:pl.hp,isPvP:1};startCombatUI()}
 
 // COMBAT
@@ -475,9 +453,7 @@ function startCombat(){
   startCombatUI();
 }
 function startCombatUI(){
-  const ec=$('eventCard'),cc=$('combatCard');
-  if(ec)ec.style.display='none';
-  if(cc)cc.style.display='block';
+  renderWorld(); // Switch logic
   $('cEnemyAva').textContent=G.combat.icon||'👤';
   $('cEnemyName').textContent=G.combat.name;
   G.turn='player';
@@ -485,238 +461,331 @@ function startCombatUI(){
   renderAbils();
   $('combatLog').innerHTML='';
   $('turnInd').textContent='Ваш ход';
-  renderWorld(); // update step button to "flee"
-  setTimeout(()=>{
-    const cc2=$('combatCard');if(cc2)cc2.style.display='block';
-    const ec2=$('eventCard');if(ec2)ec2.style.display='none';
-  },10);
+}
+function tryFlee(){
+  if(Math.random()<.5){
+    G.combat=null;
+    renderWorld();
+    $('eventCard').innerHTML=`<div class="event-icon">🏃</div><div class="event-title">Сбежали!</div>`;
+  }else{
+    $('combatLog').innerHTML+='<div class="log-dmg">Не удалось сбежать!</div>';
+  }
 }
 function updCombat(){
-  const c=G.combat;
-  const eHp=$('cEnemyHp'),eHpT=$('cEnemyHpTxt'),pHp=$('cPlayerHp'),pHpT=$('cPlayerHpTxt');
-  if(eHp)eHp.style.width=(c.hp/c.maxHp*100)+'%';
-  if(eHpT)eHpT.textContent=`${Math.max(0,c.hp)}/${c.maxHp}`;
-  if(pHp)pHp.style.width=(G.p.hp/G.p.maxHp*100)+'%';
-  if(pHpT)pHpT.textContent=`${G.p.hp}/${G.p.maxHp}`;
+  const c=G.combat;if(!c)return;
+  $('cEnemyHp').style.width=(c.hp/c.maxHp*100)+'%';
+  $('cEnemyHpTxt').textContent=`${Math.max(0,c.hp)}/${c.maxHp}`;
+  $('cPlayerHp').style.width=(G.p.hp/G.p.maxHp*100)+'%';
+  $('cPlayerHpTxt').textContent=`${G.p.hp}/${G.p.maxHp}`;
   updHdr();
 }
 function renderAbils(){
-  const eq=G.p.eq;let abs=[];
-  const mainIdx=eq.mainHand,offIdx=eq.offHand,chestIdx=eq.chest,bootsIdx=eq.boots;
-  const main=mainIdx!==null?G.p.inv.find(s=>s&&s._idx===mainIdx):null;
-  const off=offIdx!==null?G.p.inv.find(s=>s&&s._idx===offIdx):null;
-  const chest=chestIdx!==null?G.p.inv.find(s=>s&&s._idx===chestIdx):null;
-  const boots=bootsIdx!==null?G.p.inv.find(s=>s&&s._idx===bootsIdx):null;
+  let abs=[];
+  const eq=G.p.eq;
+  // Get items by UID
+  const main=G.p.inv.find(i=>i.uid===eq.mainHand);
+  const off=G.p.inv.find(i=>i.uid===eq.offHand);
+  const chest=G.p.inv.find(i=>i.uid===eq.chest);
+  const boots=G.p.inv.find(i=>i.uid===eq.boots);
   
-  if(main&&ITEMS[main.id].ab)ITEMS[main.id].ab.forEach(a=>abs.push({key:a,...ABILS[a]}));
+  if(main&&ITEMS[main.id].ab) ITEMS[main.id].ab.forEach(a=>abs.push({key:a,...ABILS[a]}));
   else abs.push({key:'punch',...ABILS.punch});
-  if(off&&ITEMS[off.id].ab)ITEMS[off.id].ab.forEach(a=>abs.push({key:a,...ABILS[a]}));
-  if(chest&&ITEMS[chest.id].ab)ITEMS[chest.id].ab.forEach(a=>abs.push({key:a,...ABILS[a]}));
-  if(boots&&ITEMS[boots.id].ab)ITEMS[boots.id].ab.forEach(a=>abs.push({key:a,...ABILS[a]}));
-  while(abs.length<4)abs.push({key:'wait',...ABILS.wait});
+  
+  if(off&&ITEMS[off.id].ab) ITEMS[off.id].ab.forEach(a=>abs.push({key:a,...ABILS[a]}));
+  if(chest&&ITEMS[chest.id].ab) ITEMS[chest.id].ab.forEach(a=>abs.push({key:a,...ABILS[a]}));
+  if(boots&&ITEMS[boots.id].ab) ITEMS[boots.id].ab.forEach(a=>abs.push({key:a,...ABILS[a]}));
+  
+  while(abs.length<4) abs.push({key:'wait',...ABILS.wait});
   abs=abs.slice(0,4);
   
-  const grid=$('abilGrid');
-  if(grid)grid.innerHTML=abs.map(a=>`<button class="abil-btn" onclick="useAbil('${a.key}')" ${G.turn!=='player'?'disabled':''}><div class="abil-name">${a.icon}${a.name}</div><div class="abil-desc">${a.desc}</div></button>`).join('');
+  $('abilGrid').innerHTML=abs.map(a=>`<button class="abil-btn" onclick="useAbil('${a.key}')" ${G.turn!=='player'?'disabled':''}><div class="abil-name">${a.icon}${a.name}</div><div class="abil-desc">${a.desc}</div></button>`).join('');
 }
 function useAbil(k){
   if(G.turn!=='player'||!G.combat)return;
   const a=ABILS[k],c=G.combat,log=$('combatLog');
-  G.turn='wait';
-  $('turnInd').textContent='...';
-  renderAbils();
+  G.turn='wait'; $('turnInd').textContent='...'; renderAbils();
+  
   setTimeout(()=>{
-    if(a.dmg){c.hp-=a.dmg;if(log)log.innerHTML+=`<div class="log-dmg">→${a.name}:${a.dmg}</div>`}
-    if(a.heal){G.p.hp=Math.min(G.p.maxHp,G.p.hp+a.heal);if(log)log.innerHTML+=`<div class="log-heal">→+${a.heal}</div>`}
+    if(a.dmg){c.hp-=a.dmg;log.innerHTML+=`<div class="log-dmg">→${a.name}:${a.dmg}</div>`}
+    if(a.heal){G.p.hp=Math.min(G.p.maxHp,G.p.hp+a.heal);log.innerHTML+=`<div class="log-heal">→+${a.heal}</div>`}
     updCombat();
+    
     if(c.hp<=0){endCombat(1);return}
     G.turn='enemy';$('turnInd').textContent='Враг...';
+    
     setTimeout(()=>{
       let dmg=a.evade?0:Math.max(0,c.dmg-(a.def||0));
-      if(dmg>0){G.p.hp-=dmg;if(log)log.innerHTML+=`<div class="log-dmg">←${dmg}</div>`}
+      if(dmg>0){G.p.hp-=dmg;log.innerHTML+=`<div class="log-dmg">←${dmg}</div>`}
       updCombat();
       if(G.p.hp<=0){endCombat(0);return}
-      G.turn='player';$('turnInd').textContent='Ваш ход';
-      renderAbils();
-      if(log)log.scrollTop=log.scrollHeight;
+      G.turn='player';$('turnInd').textContent='Ваш ход';renderAbils();
+      log.scrollTop=log.scrollHeight;
     },500);
   },500);
 }
 function endCombat(win){
-  const c=G.combat,isPvP=c.isPvP,L=LOCS[G.loc];
-  G.combat=null;
-  
+  const c=G.combat;G.combat=null;
+  renderWorld(); // Restore normal view
   if(win){
-    let loot='';
-    const hasKnife=hasTool('leather');
+    let loot='';const hasKnife=hasTool('leather');
     c.loot?.forEach(l=>{
       if(ITEMS[l]&&ITEMS[l].type!=='res'){if(addToInv(l,1))loot+=`<div>🎁${ITEMS[l].name}</div>`}
       else if(l==='leather'){if(hasKnife&&addToInv('leather',1))loot+=`<div>🦴+1</div>`}
       else if(addToInv(l,1))loot+=`<div>${ITEMS[l].icon}+1</div>`;
     });
-    const gold=Math.floor(Math.random()*15)+5;
-    G.p.gold+=gold;
-    renderWorld();
-    setTimeout(()=>{
-      const ec=$('eventCard');
-      if(ec)ec.innerHTML=`<div class="event-icon res">🎉</div><div class="event-title">Победа!</div><div style="color:var(--ok);margin:8px">${loot}<div style="color:var(--accent)">💰+${gold}</div></div>`;
-    },10);
+    const gold=Math.floor(Math.random()*15)+5;G.p.gold+=gold;
+    $('eventCard').innerHTML=`<div class="event-icon res">🎉</div><div class="event-title">Победа!</div><div style="color:var(--ok);margin:8px">${loot}<div style="color:var(--accent)">💰+${gold}</div></div>`;
   }else{
-    if(isPvP&&L.pvp==='open'){
-      G.p.eq={mainHand:null,offHand:null,chest:null,boots:null,bag:null,cloak:null};
-      G.p.inv=[];
-    }
+    if(c.isPvP&&LOCS[G.loc].pvp==='open'){G.p.eq={mainHand:null,offHand:null,chest:null,boots:null,bag:null,cloak:null};G.p.inv=[];}
     G.p.hp=Math.floor(G.p.maxHp*.5);
-    G.loc='city';
-    G.chunk=0;
-    renderWorld();
+    G.loc='city';G.chunk=0;renderCity();
   }
   updHdr();
 }
 
-// INVENTORY
+// TRAVEL
+function fastTravel(target){
+  if(G.traveling||G.combat)return;
+  closeMod();
+  
+  let totalTime;
+  if(target==='city'){
+    totalTime=CFG.cityTeleport;
+  }else{
+    // Calc logic
+    const curIdx=LOC_ORDER.indexOf(G.loc),tgtIdx=LOC_ORDER.indexOf(target);
+    if(curIdx===-1) return; 
+    let chunks=0;
+    if(!LOCS[G.loc].isCity) chunks = LOCS[G.loc].chunks-G.chunk-1; // finish current
+    if(curIdx<tgtIdx){for(let i=curIdx+1;i<tgtIdx;i++)chunks+=LOCS[LOC_ORDER[i]].chunks}
+    else{for(let i=curIdx-1;i>=tgtIdx;i--)chunks+=LOCS[LOC_ORDER[i]].chunks}
+    chunks=Math.max(1,chunks);
+    const st=getStepTime();
+    if(st===Infinity){alert('Перевес!');return}
+    totalTime=chunks*st;
+  }
+  
+  G.traveling=true;
+  $('travelBar').style.display='block';
+  $('travelText').textContent='Путь в '+LOCS[target].name;
+  
+  let elapsed=0;
+  travelTimer=setInterval(()=>{
+    elapsed+=100;
+    $('travelProg').style.width=(elapsed/totalTime*100)+'%';
+    $('travelTime').textContent=Math.ceil((totalTime-elapsed)/1000)+' сек';
+    
+    if(elapsed>=totalTime){
+      clearInterval(travelTimer);
+      G.traveling=false;
+      $('travelBar').style.display='none';
+      G.loc=target;G.chunk=0;
+      nav('Center');
+    }
+  },100);
+}
+function showTravelMod(loc){
+  if(loc===G.loc)return;
+  // Calculate preview time
+  let timeStr="~3 сек";
+  if(loc!=='city'){
+    const curIdx=LOC_ORDER.indexOf(G.loc),tgtIdx=LOC_ORDER.indexOf(loc);
+    let chunks=0;
+    if(!LOCS[G.loc].isCity) chunks = LOCS[G.loc].chunks-G.chunk-1;
+    if(curIdx<tgtIdx){for(let i=curIdx+1;i<tgtIdx;i++)chunks+=LOCS[LOC_ORDER[i]].chunks}
+    else{for(let i=curIdx-1;i>=tgtIdx;i--)chunks+=LOCS[LOC_ORDER[i]].chunks}
+    chunks=Math.max(1,chunks);
+    const st=getStepTime();
+    timeStr=st===Infinity?'Невозможно (перевес!)':`~${Math.ceil(chunks*st/1000)} сек`;
+  }
+  $('modTitle').textContent='Путешествие';
+  $('modContent').innerHTML=`<p>В: <b>${LOCS[loc].name}</b></p><p style="margin-top:8px">Время: ${timeStr}</p><button class="btn btn-p" style="margin-top:12px" onclick="fastTravel('${loc}')">В путь</button>`;
+  $('modal').classList.add('active');
+}
+
+// INV UI
 function renderInv(){
   const slots=[{k:'mainHand',l:'Прав.'},{k:'offHand',l:'Лев.'},{k:'chest',l:'Броня'},{k:'boots',l:'Обувь'},{k:'bag',l:'Сумка'},{k:'cloak',l:'Плащ'}];
   const icons={mainHand:'⚔️',offHand:'🛡️',chest:'👕',boots:'👢',bag:'🎒',cloak:'🧥'};
+  
   $('eqPanel').innerHTML=slots.map(s=>{
-    const idx=G.p.eq[s.k];
-    const slot=idx!==null&&idx!==undefined?G.p.inv.find(x=>x&&x._idx===idx):null;
-    const it=slot?ITEMS[slot.id]:null;
-    return`<div class="eq-slot${it?' filled':''}" onclick="eqClick('${s.k}')">${it?it.icon:icons[s.k]}<span class="eq-label">${s.l}</span></div>`;
+    const uid=G.p.eq[s.k];
+    const item=uid?G.p.inv.find(i=>i.uid===uid):null;
+    const it=item?ITEMS[item.id]:null;
+    return `<div class="eq-slot${it?' filled':''}" onclick="eqClick('${s.k}')">${it?it.icon:icons[s.k]}<span class="eq-label">${s.l}</span></div>`;
   }).join('');
   
   const bag=getBagItem(),w=getTotalWeight(),stage=getWeightStage();
   if(bag){
-    const max=bag.wMax;
-    $('weightFill').style.width=(w/max*100)+'%';
-    $('weightFill').style.background=stage==='normal'?'var(--ok)':stage==='medium'?'var(--warn)':stage==='heavy'?'var(--bad)':'#f00';
+    const max=bag.wMax; // Heavy threshold is the visible max
+    let pct = w/max*100; 
+    $('weightFill').style.width=(pct>100?100:pct)+'%';
+    $('weightFill').style.background=stage==='normal'?'var(--ok)':stage==='medium'?'var(--warn)':stage==='heavy'?'var(--bad)':'#ff0000';
     $('weightMarks').innerHTML=`<div class="weight-mark" style="width:${bag.wNorm/max*100}%"></div><div class="weight-mark" style="width:${(bag.wMed-bag.wNorm)/max*100}%"></div><div class="weight-mark" style="width:${(bag.wHeavy-bag.wMed)/max*100}%"></div>`;
-    $('weightText').textContent=`${w.toFixed(1)}/${max}`;
+    $('weightText').textContent=`⚖️ ${w.toFixed(1)} / ${max} (${((w/max)*100).toFixed(0)}%)`;
   }else{
-    $('weightFill').style.width='100%';
-    $('weightFill').style.background='#f00';
-    $('weightText').textContent='Нет сумки!';
+    $('weightFill').style.width='100%';$('weightFill').style.background='#f00';$('weightText').textContent='Нет сумки!';
   }
   $('weightStatus').textContent={normal:'Норма',medium:'Средне',heavy:'Тяжело',over:'Перевес!'}[stage];
   $('weightStatus').className='weight-status '+stage;
   
   const numSlots=getSlots();
+  // Filter out equipped items from grid
+  const visibleItems = G.p.inv.filter(i => !isEquippedUid(i.uid));
+  
   let h='';
   for(let i=0;i<numSlots;i++){
-    const slot=G.p.inv[i];
-    if(slot){
-      const it=ITEMS[slot.id],eq=isEquippedIdx(slot._idx);
-      h+=`<div class="inv-slot${eq?' eq':''}" onclick="invClick(${i})">${it.icon}${slot.qty>1?`<span class="qty">x${slot.qty}</span>`:''}<div class="name">${it.name}</div></div>`;
+    const item=visibleItems[i];
+    if(item){
+      const it=ITEMS[item.id];
+      h+=`<div class="inv-slot" onclick="invClick(${G.p.inv.indexOf(item)})">${it.icon}${item.qty>1?`<span class="qty">x${item.qty}</span>`:''}<div class="name">${it.name}</div></div>`;
     }else h+=`<div class="inv-slot empty"></div>`;
   }
   $('invGrid').innerHTML=h;
 }
 function invClick(i){
-  const slot=G.p.inv[i];if(!slot)return;
-  const it=ITEMS[slot.id],eq=isEquippedIdx(slot._idx);
-  $('modTitle').textContent=it.icon+' '+it.name+(slot.qty>1?` x${slot.qty}`:'');
+  const item=G.p.inv[i];if(!item)return;
+  const it=ITEMS[item.id],eq=isEquippedUid(item.uid);
+  $('modTitle').textContent=it.name;
   let btns='';
-  if(it.slot&&!eq)btns+=`<button class="btn btn-p" onclick="equip(${i});closeMod()">Надеть</button>`;
-  if(eq)btns+=`<button class="btn btn-s" onclick="unequip('${it.slot}');closeMod()">Снять</button>`;
-  btns+=`<button class="btn btn-s" onclick="dropItem(${i});closeMod()">Выбросить</button>`;
-  $('modContent').innerHTML=`<p style="color:var(--dim);margin-bottom:8px">${it.desc||it.type||''}</p><p style="font-size:12px;margin-bottom:8px">Вес: ${it.weight}</p>${it.ab?'<div style="font-size:11px;margin-bottom:8px">'+it.ab.map(a=>`${ABILS[a].icon}${ABILS[a].name}`).join(', ')+'</div>':''}<div style="display:flex;gap:6px;flex-wrap:wrap">${btns}</div>`;
+  if(it.slot&&!eq) btns+=`<button class="btn btn-p" onclick="equip(${i});closeMod()">Надеть</button>`;
+  if(eq) btns+=`<button class="btn btn-s" onclick="unequip('${it.slot}');closeMod()">Снять</button>`;
+  btns+=`<button class="btn btn-s btn-sm" onclick="if(confirm('Выбросить?')) { dropItem(${i}); closeMod(); }">🗑️</button>`;
+  
+  let stats='';
+  if(it.dmg) stats+=`⚔️Урон: ${it.dmg} `;
+  if(it.def) stats+=`🛡️Защ: ${it.def} `;
+  if(it.heal) stats+=`💚Леч: ${it.heal} `;
+  
+  $('modContent').innerHTML=`
+    <p style="font-size:13px;color:var(--dim);margin-bottom:8px">${it.desc||''}</p>
+    <div style="font-size:12px;margin-bottom:8px">
+      <div>Вес: ${it.weight}</div>
+      <div>${stats}</div>
+      ${it.ab?`<div style="color:var(--accent);margin-top:4px">Способности: ${it.ab.map(k=>ABILS[k].name).join(', ')}</div>`:''}
+    </div>
+    ${btns?'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">'+btns+'</div>':''}
+  `;
   $('modal').classList.add('active');
 }
 function eqClick(slot){
-  const idx=G.p.eq[slot];if(idx===null||idx===undefined)return;
-  const s=G.p.inv.find(x=>x&&x._idx===idx);if(!s)return;
-  const it=ITEMS[s.id];
-  $('modTitle').textContent=it.icon+' '+it.name;
-  $('modContent').innerHTML=`<p style="color:var(--dim);margin-bottom:8px">${it.desc||''}</p><button class="btn btn-s" onclick="unequip('${slot}');closeMod()">Снять</button>`;
+  const uid=G.p.eq[slot];if(!uid)return;
+  const item=G.p.inv.find(i=>i.uid===uid);if(!item)return;
+  const it=ITEMS[item.id];
+  $('modTitle').textContent=it.name;
+  $('modContent').innerHTML=`
+    <p style="font-size:13px;color:var(--dim);margin-bottom:8px">${it.desc||''}</p>
+    <button class="btn btn-s" onclick="unequip('${slot}');closeMod()">Снять</button>
+  `;
   $('modal').classList.add('active');
 }
 function equip(i){
-  const slot=G.p.inv[i];if(!slot)return;
-  const it=ITEMS[slot.id];if(!it.slot)return;
-  if(it.two)G.p.eq.offHand=null;
-  G.p.eq[it.slot]=slot._idx;
+  const item=G.p.inv[i],it=ITEMS[item.id];
+  if(it.slot==='bag'){
+     // Bag swap logic: Check if new capacity >= current unequipped items
+     const newCap = it.slots;
+     const currentItems = G.p.inv.filter(x => !isEquippedUid(x.uid) && x !== item).length; // items currently in bag, excluding the bag itself (since it will be equipped)
+     // Actually, if we equip the bag, it leaves the inventory list visually, but conceptually items are "in" it.
+     // Wait, simple check: `inv.length - equipped_count` vs `newCap`.
+     // If we equip this bag, it becomes equipped. The OLD bag becomes unequipped.
+     // So total unequipped items = (current - 1 (this bag) + 1 (old bag)).
+     let resultingCount = G.p.inv.filter(x => !isEquippedUid(x.uid)).length - 1; 
+     if(G.p.eq.bag) resultingCount++; 
+     
+     if(resultingCount > newCap) {
+        alert(`Не влезает! Вещей: ${resultingCount}, слотов будет: ${newCap}`);
+        return;
+     }
+  }
+  
+  if(it.two) G.p.eq.offHand=null;
+  // If swapping bag, unequip old first
+  if(it.slot==='bag' && G.p.eq.bag) {
+      // old bag goes to inv
+  }
+  G.p.eq[it.slot]=item.uid;
   renderInv();
 }
-function unequip(slot){G.p.eq[slot]=null;renderInv()}
-function dropItem(i){const slot=G.p.inv[i];if(slot&&isEquippedIdx(slot._idx)){for(let k in G.p.eq)if(G.p.eq[k]===slot._idx)G.p.eq[k]=null}G.p.inv.splice(i,1);renderInv()}
+function unequip(slot){
+  if(slot==='bag'){
+     // Check basic slots (4)
+     const baseSlots = 4;
+     const currentItems = G.p.inv.filter(x => !isEquippedUid(x.uid)).length + 1; // +1 because bag becomes item
+     if(currentItems > baseSlots){
+        alert(`Нельзя снять! Вещей: ${currentItems}, базовых слотов: ${baseSlots}`);
+        return;
+     }
+  }
+  G.p.eq[slot]=null;
+  renderInv();
+}
+function dropItem(i){
+  const item=G.p.inv[i];
+  if(isEquippedUid(item.uid)){
+    for(let k in G.p.eq) if(G.p.eq[k]===item.uid) G.p.eq[k]=null;
+  }
+  G.p.inv.splice(i,1);renderInv();
+}
 function closeMod(){$('modal').classList.remove('active')}
 
-// MAP
+// MAP UI
 function renderLocList(){
   $('locList').innerHTML=LOC_ORDER.map(k=>{
     const L=LOCS[k],cur=k===G.loc,unlocked=G.unlocked.includes(k);
     return`<div class="loc-item${cur?' current':''}${!unlocked?' locked':''}" onclick="${unlocked?`showTravelMod('${k}')`:''}">
-      <div style="font-size:20px">${L.icon}</div>
-      <div style="flex:1"><div style="font-weight:600">${L.name} <span class="badge badge-${L.pvp==='safe'?'ok':L.pvp==='open'?'bad':'warn'}">${L.pvp}</span>${!unlocked?' 🔒':''}</div>
-      <div style="font-size:11px;color:var(--dim)">${L.isCity?'Город':'Ур.'+L.tier}${cur?' • Здесь':''}</div></div></div>`;
+      <div style="font-size:20px">${L.icon}</div><div style="flex:1"><div style="font-weight:600">${L.name}</div><div style="font-size:11px;color:var(--dim)">${L.isCity?'Город':'Ур.'+L.tier}</div></div>
+    </div>`;
   }).join('');
-}
-function showTravelMod(loc){
-  if(loc===G.loc)return;
-  const L=LOCS[loc];
-  let time;
-  if(loc==='city')time='~3 сек';
-  else{
-    const curL=LOCS[G.loc];
-    let chunks=curL.isCity?0:curL.chunks-G.chunk-1;
-    const curIdx=LOC_ORDER.indexOf(G.loc),tgtIdx=LOC_ORDER.indexOf(loc);
-    if(curIdx<tgtIdx)for(let i=curIdx+1;i<tgtIdx;i++)chunks+=LOCS[LOC_ORDER[i]].chunks;
-    else for(let i=curIdx-1;i>=tgtIdx;i--)chunks+=LOCS[LOC_ORDER[i]].chunks;
-    chunks=Math.max(1,chunks);
-    const st=getStepTime();
-    time=st===Infinity?'Невозможно (перевес!)':`~${Math.ceil(chunks*st/1000)} сек`;
-  }
-  $('modTitle').textContent='Путешествие';
-  $('modContent').innerHTML=`<p>Куда: <b>${L.icon} ${L.name}</b></p><p style="color:var(--dim);margin:8px 0">Время: ${time}</p><button class="btn btn-p" onclick="fastTravel('${loc}')">🚶 В путь</button>`;
-  $('modal').classList.add('active');
 }
 
 // CITY TABS
 function cityTab(t){
-  const tabs=document.querySelectorAll('#cityTabs .tab');
-  tabs.forEach((x,i)=>x.classList.toggle('active',t==='craft'&&!i||t==='bank'&&i===1||t==='auc'&&i===2));
+  document.querySelectorAll('#cityTabs .tab').forEach((x,i)=>x.classList.toggle('active',t==='craft'&&!i||t==='bank'&&i===1||t==='auc'&&i===2));
   if(t==='craft')renderCraft();else if(t==='bank')renderBank();else renderAuc();
 }
 function renderCraft(cat='weapons'){
   const cats={weapons:['wooden_sword','iron_sword','wooden_bow','wooden_staff','wooden_shield'],armor:['cloth_robe','leather_armor','plate_armor','cloth_boots','leather_boots','plate_boots'],tools:['pickaxe','axe','sickle','skinning_knife'],bags:['basic_bag','large_bag','basic_cloak']};
   let h=`<div class="tabs"><button class="tab${cat==='weapons'?' active':''}" onclick="renderCraft('weapons')">Оружие</button><button class="tab${cat==='armor'?' active':''}" onclick="renderCraft('armor')">Броня</button><button class="tab${cat==='tools'?' active':''}" onclick="renderCraft('tools')">Инстр.</button><button class="tab${cat==='bags'?' active':''}" onclick="renderCraft('bags')">Сумки</button></div>`;
-  h+=cats[cat].map(k=>{const it=ITEMS[k],rec=RECIPES[k];if(!rec)return'';const can=Object.entries(rec).every(([r,n])=>countItem(r)>=n);const reqs=Object.entries(rec).map(([r,n])=>`<span class="craft-req ${countItem(r)>=n?'ok':'no'}">${ITEMS[r].icon}${countItem(r)}/${n}</span>`).join('');return`<div class="craft-item"><div class="craft-icon">${it.icon}</div><div class="craft-info"><div class="craft-name">${it.name}</div><div class="craft-reqs">${reqs}</div></div><button class="btn btn-sm${can?' btn-p':' btn-s'}" onclick="craft('${k}')"${can?'':' disabled'}>+</button></div>`}).join('');
+  h+=cats[cat].map(k=>{const it=ITEMS[k],rec=RECIPES[k];const can=Object.entries(rec).every(([r,n])=>countItem(r)>=n);const reqs=Object.entries(rec).map(([r,n])=>`<span class="craft-req ${countItem(r)>=n?'ok':'no'}">${ITEMS[r].icon}${countItem(r)}/${n}</span>`).join('');return`<div class="craft-item"><div class="craft-icon">${it.icon}</div><div class="craft-info"><div class="craft-name">${it.name}</div><div class="craft-reqs">${reqs}</div></div><button class="btn btn-sm${can?' btn-p':' btn-s'}" onclick="craft('${k}')"${can?'':' disabled'}>+</button></div>`}).join('');
   $('cityContent').innerHTML=h;
 }
 function craft(k){const rec=RECIPES[k];for(const[r,n]of Object.entries(rec))if(countItem(r)<n)return;for(const[r,n]of Object.entries(rec))removeItem(r,n);addToInv(k,1);renderCraft()}
 
-// BANK
 function renderBank(){
-  $('cityContent').innerHTML=`<div class="card-title">Банк</div><p style="font-size:11px;color:var(--dim);margin-bottom:8px">Защищено от PvP</p>
-  <div class="bank-grid">${G.p.bank.map((b,i)=>`<div class="inv-slot" onclick="bankItemClick(${i},'take')">${ITEMS[b.id].icon}${b.qty>1?`<span class="qty">x${b.qty}</span>`:''}</div>`).join('')||'<div style="grid-column:span 4;color:var(--muted);text-align:center;padding:12px">Пусто</div>'}</div>
-  <div class="card-title" style="margin-top:12px">Положить</div>
-  <div class="bank-grid">${G.p.inv.filter(s=>s&&!isEquippedIdx(s._idx)).map((s,idx)=>`<div class="inv-slot" onclick="bankItemClick(${G.p.inv.indexOf(s)},'put')">${ITEMS[s.id].icon}${s.qty>1?`<span class="qty">x${s.qty}</span>`:''}</div>`).join('')||'<div style="grid-column:span 4;color:var(--muted);text-align:center;padding:12px">Пусто</div>'}</div>`;
+  $('cityContent').innerHTML=`<div class="card-title">Банк</div><div class="bank-grid">${G.p.bank.map((b,i)=>`<div class="inv-slot" onclick="bankItemClick(${i},'take')">${ITEMS[b.id].icon}${b.qty>1?`<span class="qty">x${b.qty}</span>`:''}</div>`).join('')||'<div style="text-align:center;grid-column:span 4;padding:10px;color:var(--muted)">Пусто</div>'}</div>
+  <div class="card-title" style="margin-top:12px">Положить</div><div class="bank-grid">${G.p.inv.filter(i=>!isEquippedUid(i.uid)).map((s,idx)=>`<div class="inv-slot" onclick="bankItemClick(${G.p.inv.indexOf(s)},'put')">${ITEMS[s.id].icon}${s.qty>1?`<span class="qty">x${s.qty}</span>`:''}</div>`).join('')||'<div style="text-align:center;grid-column:span 4;padding:10px;color:var(--muted)">Пусто</div>'}</div>`;
 }
 function bankItemClick(idx,action){
-  const arr=action==='take'?G.p.bank:G.p.inv,slot=arr[idx];if(!slot)return;
-  const it=ITEMS[slot.id];
-  $('modTitle').textContent=(action==='take'?'Забрать':'Положить')+': '+it.name;
-  $('modContent').innerHTML=`<p>Доступно: ${slot.qty}</p><div class="qty-input"><div class="qty-btns"><button onclick="$('qtyVal').value=1">1</button><button onclick="$('qtyVal').value=${Math.floor(slot.qty/2)}">${Math.floor(slot.qty/2)||1}</button><button onclick="$('qtyVal').value=${slot.qty}">Всё</button></div><input type="number" id="qtyVal" value="${slot.qty}" min="1" max="${slot.qty}"></div><button class="btn btn-p" onclick="bankTransfer(${idx},'${action}')">Подтвердить</button>`;
+  const arr=action==='take'?G.p.bank:G.p.inv;
+  const item=arr[idx];
+  $('modTitle').textContent=(action==='take'?'Забрать ':'Положить ')+ITEMS[item.id].name;
+  $('modContent').innerHTML=`<div class="qty-input"><div class="qty-btns"><button onclick="$('qval').value=1">1</button><button onclick="$('qval').value=${item.qty}">Все</button></div><input type="number" id="qval" value="${item.qty}" min="1" max="${item.qty}"></div><button class="btn btn-p" onclick="bankExec(${idx},'${action}')">Подтвердить</button>`;
   $('modal').classList.add('active');
 }
-function bankTransfer(idx,action){
-  const qty=parseInt($('qtyVal').value)||1;
+function bankExec(idx,action){
+  const qty=parseInt($('qval').value)||1;
   if(action==='put'){
-    const slot=G.p.inv[idx];if(!slot||qty>slot.qty)return;
-    const id=slot.id;
-    let left=qty;
-    for(let b of G.p.bank){if(b.id===id&&b.qty<ITEMS[id].stack){const add=Math.min(left,ITEMS[id].stack-b.qty);b.qty+=add;left-=add}}
-    while(left>0){const add=Math.min(left,ITEMS[id].stack);G.p.bank.push({id,qty:add});left-=add}
-    slot.qty-=qty;if(slot.qty<=0)G.p.inv.splice(idx,1);
+    const item=G.p.inv[idx];if(!item||item.qty<qty)return;
+    const id=item.id;
+    // Stack in bank
+    let existing=G.p.bank.find(b=>b.id===id&&b.qty<ITEMS[id].stack);
+    if(existing){
+       const canAdd=Math.min(qty,ITEMS[id].stack-existing.qty);
+       existing.qty+=canAdd;
+       if(qty>canAdd) G.p.bank.push({id,qty:qty-canAdd,uid:nextUid++});
+    } else {
+       G.p.bank.push({id,qty,uid:nextUid++});
+    }
+    item.qty-=qty; if(item.qty<=0) G.p.inv.splice(idx,1);
   }else{
-    const slot=G.p.bank[idx];if(!slot||qty>slot.qty)return;
-    if(!addToInv(slot.id,qty)){closeMod();return}
-    slot.qty-=qty;if(slot.qty<=0)G.p.bank.splice(idx,1);
+    const item=G.p.bank[idx];if(!item||item.qty<qty)return;
+    if(addToInv(item.id,qty)){
+       item.qty-=qty; if(item.qty<=0) G.p.bank.splice(idx,1);
+    }
   }
   closeMod();renderBank();
 }
 
-// AUCTION
 function renderAuc(){
   const grouped={};
   AUC.forEach(a=>{if(!grouped[a.item])grouped[a.item]={item:a.item,orders:[],minPrice:a.price};grouped[a.item].orders.push(a);if(a.price<grouped[a.item].minPrice)grouped[a.item].minPrice=a.price});
@@ -728,48 +797,38 @@ function renderAuc(){
     return true;
   });
   if(aucSort==='price')items.sort((a,b)=>a.minPrice-b.minPrice);
-  
+
   $('cityContent').innerHTML=`<div class="auc-filters">
-    <select onchange="aucFilter=this.value;renderAuc()"><option value="all">Все</option><option value="res"${aucFilter==='res'?' selected':''}>Ресурсы</option><option value="eq"${aucFilter==='eq'?' selected':''}>Снаряжение</option></select>
+    <select onchange="aucFilter=this.value;renderAuc()"><option value="all">Все</option><option value="res"${aucFilter==='res'?' selected':''}>Ресурсы</option><option value="eq"${aucFilter==='eq'?' selected':''}>Снар.</option></select>
     <input type="text" placeholder="Поиск" value="${aucSearch}" oninput="aucSearch=this.value;renderAuc()">
     <label class="toggle"><input type="checkbox" ${aucExec?'checked':''} onchange="aucExec=this.checked;renderAuc()">Тест</label>
   </div>
-  <div class="card-title">Купить</div>
-  ${items.map(g=>{const it=ITEMS[g.item];return`<div class="auc-group"><div class="auc-group-head" onclick="toggleAucGroup('${g.item}')"><div class="auc-icon">${it.icon}</div><div class="auc-group-info"><div class="auc-group-name">${it.name}</div><div class="auc-group-meta">${g.orders.length} лотов</div></div><div class="auc-group-price">от 💰${g.minPrice}</div></div><div class="auc-orders" id="auco_${g.item}">${g.orders.sort((a,b)=>a.price-b.price).map(o=>`<div class="auc-order"><div class="auc-order-info">${o.seller}</div><div class="auc-order-price">💰${o.price}</div>${aucExec&&o.seller==='Вы'?`<button class="btn btn-sm btn-s" onclick="execOrder(${o.id})">Исполн.</button>`:`<button class="btn btn-sm${G.p.gold>=o.price?' btn-p':' btn-s'}" onclick="buyAuc(${o.id})"${G.p.gold>=o.price?'':' disabled'}>Купить</button>`}</div>`).join('')}</div></div>`}).join('')||'<p style="color:var(--muted);text-align:center;padding:12px">Нет лотов</p>'}
-  <div class="card-title" style="margin-top:12px">Продать</div>
-  ${G.p.inv.filter(s=>s&&!isEquippedIdx(s._idx)).map(s=>`<div class="craft-item"><div class="craft-icon">${ITEMS[s.id].icon}</div><div class="craft-info"><div class="craft-name">${ITEMS[s.id].name} ${s.qty>1?'x'+s.qty:''}</div></div><button class="btn btn-sm btn-s" onclick="showSell('${s.id}')">Продать</button></div>`).join('')||'<p style="color:var(--muted);text-align:center;padding:12px">Нет</p>'}`;
+  <div class="card-title">Купить</div>${items.map(g=>{const it=ITEMS[g.item];return`<div class="auc-group"><div class="auc-group-head" onclick="$('auco_${g.item}').classList.toggle('open')"><div class="auc-icon">${it.icon}</div><div class="auc-group-info"><div class="auc-group-name">${it.name}</div><div class="auc-group-meta">${g.orders.length} лот.</div></div><div class="auc-group-price">от 💰${g.minPrice}</div></div><div class="auc-orders" id="auco_${g.item}">${g.orders.sort((a,b)=>a.price-b.price).map(o=>`<div class="auc-order"><div class="auc-order-info">${o.seller}</div><div class="auc-order-price">💰${o.price}</div>${aucExec&&o.seller==='Вы'?`<button class="btn btn-sm btn-s" onclick="execOrder(${o.id})">Исполн.</button>`:`<button class="btn btn-sm${G.p.gold>=o.price?' btn-p':' btn-s'}" onclick="buyAuc(${o.id})"${G.p.gold>=o.price?'':' disabled'}>Купить</button>`}</div>`).join('')}</div></div>`}).join('')}
+  <div class="card-title" style="margin-top:12px">Продать</div>${G.p.inv.filter(i=>!isEquippedUid(i.uid)).map(s=>`<div class="craft-item"><div class="craft-icon">${ITEMS[s.id].icon}</div><div class="craft-info"><div class="craft-name">${ITEMS[s.id].name}</div></div><button class="btn btn-sm btn-s" onclick="showSell(${G.p.inv.indexOf(s)})">Продать</button></div>`).join('')}`;
 }
-function toggleAucGroup(item){const el=$('auco_'+item);if(el)el.classList.toggle('open')}
-function showSell(ik){
-  $('modTitle').textContent='Продать '+ITEMS[ik].name;
-  const max=countItem(ik);
-  $('modContent').innerHTML=`<div class="qty-input"><span>Кол-во:</span><input type="number" id="sellQty" value="1" min="1" max="${max}"></div><div class="qty-input"><span>Цена/шт:</span><input type="number" id="sellPrice" value="50" min="1"></div><button class="btn btn-p" onclick="sellAuc('${ik}')">Выставить</button>`;
+function showSell(idx){
+  const item=G.p.inv[idx];
+  $('modTitle').textContent='Продать '+ITEMS[item.id].name;
+  $('modContent').innerHTML=`<div class="qty-input"><div class="qty-btns"><button onclick="$('sq').value=1">1</button><button onclick="$('sq').value=${item.qty}">Все</button></div><input type="number" id="sq" value="1" max="${item.qty}"></div><div class="qty-input"><span>Цена:</span><input type="number" id="sp" value="10"></div><button class="btn btn-p" onclick="sellAuc(${idx})">Выставить</button>`;
   $('modal').classList.add('active');
 }
-function sellAuc(ik){
-  const qty=parseInt($('sellQty').value)||1,price=parseInt($('sellPrice').value)||50;
-  if(countItem(ik)<qty)return;
-  removeItem(ik,qty);
-  for(let i=0;i<qty;i++)AUC.push({id:aucId++,item:ik,price,seller:'Вы'});
+function sellAuc(idx){
+  const qty=parseInt($('sq').value)||1,price=parseInt($('sp').value)||10;
+  const item=G.p.inv[idx];if(!item||item.qty<qty)return;
+  item.qty-=qty;if(item.qty<=0)G.p.inv.splice(idx,1);
+  for(let i=0;i<qty;i++) AUC.push({id:aucId++,item:item.id,price,seller:'Вы'});
   closeMod();renderAuc();
 }
 function buyAuc(id){
-  const idx=AUC.findIndex(a=>a.id===id);if(idx===-1)return;
+  const idx=AUC.findIndex(a=>a.id===id);if(idx<0)return;
   const a=AUC[idx];if(G.p.gold<a.price)return;
-  G.p.gold-=a.price;addToInv(a.item,1);AUC.splice(idx,1);
-  updHdr();renderAuc();
+  G.p.gold-=a.price;addToInv(a.item,1);AUC.splice(idx,1);updHdr();renderAuc();
 }
 function execOrder(id){
-  const idx=AUC.findIndex(a=>a.id===id);if(idx===-1)return;
-  const a=AUC[idx];if(a.seller!=='Вы')return;
-  G.p.gold+=a.price;AUC.splice(idx,1);
-  updHdr();
-  $('modTitle').textContent='Продано!';
-  $('modContent').innerHTML=`<p>${ITEMS[a.item].name} за 💰${a.price}</p>`;
-  $('modal').classList.add('active');
+  const idx=AUC.findIndex(a=>a.id===id);if(idx<0)return;
+  G.p.gold+=AUC[idx].price;AUC.splice(idx,1);updHdr();renderAuc();
 }
 
-// MASTERY
 function renderMast(){
   const icons={sword:'⚔️',bow:'🏹',staff:'🪄',cloth:'👘',leather:'🦺',plate:'🛡️'};
   $('mastList').innerHTML=Object.entries(G.p.mast).map(([k,m])=>{
@@ -778,9 +837,21 @@ function renderMast(){
   }).join('');
 }
 
-// INIT
+// INITIALIZATION
+// Manually init bag first to avoid overflow checks
+const startBag = {id:'basic_bag', qty:1, uid:nextUid++};
+G.p.inv.push(startBag);
+G.p.eq.bag = startBag.uid;
+// Add rest
+initList.forEach(i=>{
+    if(i.id!=='basic_bag') addToInv(i.id,i.qty);
+});
+// Equip default sword
+const sw = G.p.inv.find(i=>i.id==='wooden_sword');
+if(sw) G.p.eq.mainHand = sw.uid;
+
 updHdr();
-nav('World');
+nav('Center');
 </script>
 </body>
 </html>
