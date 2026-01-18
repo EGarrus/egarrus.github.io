@@ -29,18 +29,32 @@ export function updatePlayerName() {
 }
 
 export function initGame() {
+  console.log("Инициализация игры началась");
   try {
+    console.log("1. initGameState");
     initGameState();
+    console.log("2. initTelegram");
     initTelegram();
+    console.log("3. updatePlayerName");
     updatePlayerName();
+    console.log("4. updHdr");
     updHdr();
+    console.log("5. renderMap");
     renderMap();
+    console.log("6. genEvent");
     genEvent();
-    
+
     // Убедимся, что экран исследования активен
+    console.log("7. Установка активного экрана");
     document.querySelectorAll('.screen').forEach(x => x.classList.remove('active'));
     const exploreScreen = document.getElementById('sExplore');
-    if (exploreScreen) exploreScreen.classList.add('active');
+    if (exploreScreen) {
+      exploreScreen.classList.add('active');
+      console.log("Экран исследования активирован");
+    } else {
+      console.error("Экран исследования не найден!");
+    }
+    console.log("Инициализация игры завершена успешно");
   } catch (error) {
     console.error("Ошибка инициализации игры:", error);
     showError("Ошибка инициализации игры: " + error.message);

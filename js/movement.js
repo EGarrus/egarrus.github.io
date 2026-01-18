@@ -13,14 +13,21 @@ let travelInterval = null;
 let travelProgress = 0;
 
 export function renderMovementUI() {
+  console.log("renderMovementUI вызвана, текущая локация:", S.loc);
   const btn = document.getElementById('stepBtn');
   const text = document.getElementById('stepText');
   const prog = document.getElementById('stepProg');
-  
-  if (!btn || !text) return;
-  
+
+  if (!btn || !text) {
+    console.error("Элементы stepBtn или stepText не найдены");
+    return;
+  }
+
   const L = LOCS[S.loc];
-  if (!L) return;
+  if (!L) {
+    console.error("Локация не найдена:", S.loc);
+    return;
+  }
   
   // Если идёт быстрое перемещение
   if (S.traveling) {

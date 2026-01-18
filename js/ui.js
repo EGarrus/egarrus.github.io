@@ -14,18 +14,36 @@ export function updHdr() {
 }
 
 export function nav(s, btn) {
+  console.log("nav вызвана для экрана:", s);
   document.querySelectorAll('.screen').forEach(x => x.classList.remove('active'));
   const screen = document.getElementById('s' + s);
-  if (screen) screen.classList.add('active');
+  if (screen) {
+    screen.classList.add('active');
+    console.log("Экран активирован:", s);
+  } else {
+    console.error("Экран не найден:", 's' + s);
+  }
 
   document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
   if (btn) btn.classList.add('active');
 
   // Используем глобальные функции
-  if (s === 'Inv' && window.renderInv) window.renderInv();
-  if (s === 'Map' && window.renderLocList) window.renderLocList();
-  if (s === 'City' && window.renderCity) window.renderCity();
-  if (s === 'Mast' && window.renderMast) window.renderMast();
+  if (s === 'Inv' && window.renderInv) {
+    console.log("Вызов renderInv");
+    window.renderInv();
+  }
+  if (s === 'Map' && window.renderLocList) {
+    console.log("Вызов renderLocList");
+    window.renderLocList();
+  }
+  if (s === 'City' && window.renderCity) {
+    console.log("Вызов renderCity");
+    window.renderCity();
+  }
+  if (s === 'Mast' && window.renderMast) {
+    console.log("Вызов renderMast");
+    window.renderMast();
+  }
 }
 
 export function closeMod() {
