@@ -50,8 +50,7 @@ export function duel() {
   c.innerHTML = `<p style="color:var(--dim)">Ожидание...</p>`;
   setTimeout(() => {
     if (Math.random() > 0.5) {
-      // Динамический импорт для избежания циклических зависимостей
-      import('./combat.js').then(m => m.attackPlayer());
+      if (window.attackPlayer) window.attackPlayer();
     } else {
       if (c) c.innerHTML = `<p style="color:var(--bad)">Отказ</p>`;
     }
