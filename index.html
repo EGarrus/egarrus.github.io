@@ -48,103 +48,179 @@ body{max-width:480px;margin:0 auto;height:100vh;display:flex;flex-direction:colu
 .fighter-ava{width:44px;height:44px;background:var(--card);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px}
 .fighter-info{flex:1}.fighter-name{font-weight:600;font-size:13px;margin-bottom:4px}
 .fighter-hp{height:10px;background:#3d2a2a;border-radius:5px;overflow:hidden;position:relative}
-.fighter-hp-fill{height:100%;background:linear-gradient(90deg,#b91c1c,var(--hp));transition:width .3s}
-.fighter-hp-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:9px;font-weight:700}
-.abilities{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
-.abil-btn{padding:10px 8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);cursor:pointer;text-align:left}
-.abil-btn:hover{border-color:var(--accent)}.abil-btn:disabled{opacity:.5}
-.abil-name{font-weight:600;font-size:12px}.abil-desc{font-size:10px;color:var(--muted)}
-.turn-indicator{text-align:center;padding:8px;font-size:12px;color:var(--accent);font-weight:600}
-.log{max-height:80px;overflow-y:auto;background:var(--bg);border-radius:6px;padding:8px;margin-top:10px;font-size:11px}
-.log-dmg{color:var(--bad)}.log-heal{color:var(--ok)}
-.inv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.inv-slot{aspect-ratio:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:20px;position:relative}
-.inv-slot:hover{border-color:var(--accent)}.inv-slot.empty{opacity:.3;cursor:default}
-.inv-slot.eq{border-color:var(--accent);background:rgba(201,162,39,.1)}
-.inv-slot .eq-dot{position:absolute;top:3px;right:3px;width:6px;height:6px;background:var(--accent);border-radius:50%}
-.inv-slot .name{font-size:8px;color:var(--dim);text-align:center;line-height:1.1;margin-top:2px}
-.eq-panel{display:flex;justify-content:center;gap:6px;margin-bottom:12px;flex-wrap:wrap}
-.eq-slot{width:48px;height:48px;background:var(--bg);border:1px dashed var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--muted)}
-.eq-slot.filled{border-style:solid;border-color:var(--accent);color:var(--text)}
-.res-bar{display:flex;gap:4px;flex-wrap:wrap}
-.res-item{display:flex;align-items:center;gap:4px;padding:6px 10px;background:var(--bg);border-radius:6px;font-size:12px}
-.loc-item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;cursor:pointer}
-.loc-item:hover{border-color:var(--accent)}.loc-item.current{border-color:var(--ok)}
-.craft-item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:10px;margin-bottom:6px}
-.craft-icon{width:40px;height:40px;background:var(--card);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px}
-.craft-info{flex:1}.craft-name{font-weight:600;font-size:13px}
-.craft-reqs{display:flex;gap:6px;font-size:11px;margin-top:2px;flex-wrap:wrap}
-.craft-req{padding:2px 5px;background:var(--card);border-radius:3px}.craft-req.ok{color:var(--ok)}.craft-req.no{color:var(--bad)}
-.mast-item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:8px;margin-bottom:6px}
-.mast-icon{width:36px;height:36px;background:var(--card);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px}
-.mast-info{flex:1}.mast-head{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}.mast-lv{color:var(--xp);font-weight:600}
-.mast-bar{height:4px;background:var(--bg);border-radius:2px}.mast-bar-fill{height:100%;background:var(--xp);border-radius:2px}
-.auc-filters{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
-.auc-filters select,.auc-filters input{padding:6px 8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px}
-.auc-filters input[type=text]{flex:1;min-width:80px}
-.auc-group{background:var(--bg);border-radius:8px;margin-bottom:6px;overflow:hidden}
-.auc-group-head{display:flex;align-items:center;gap:8px;padding:10px;cursor:pointer}
-.auc-group-head:hover{background:var(--card)}
-.auc-icon{width:32px;height:32px;background:var(--card);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px}
-.auc-group-info{flex:1}.auc-group-name{font-weight:600;font-size:13px}.auc-group-meta{font-size:10px;color:var(--muted)}
-.auc-group-price{color:var(--accent);font-weight:600;font-size:13px}
-.auc-orders{padding:0 10px 10px;display:none}.auc-orders.open{display:block}
-.auc-order{display:flex;align-items:center;gap:8px;padding:6px;background:var(--card);border-radius:6px;margin-bottom:4px;font-size:12px}
-.auc-order-info{flex:1}.auc-order-price{color:var(--accent)}
-.bank-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
-.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+.fighter-hp-fill{height:100%;border-radius:5px;transition:width .3s}
+.abils{margin:16px 0}.abil-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.abil-btn{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:left;cursor:pointer;transition:all .2s}
+.abil-btn:hover{background:var(--bg)}.abil-btn:disabled{opacity:.4;cursor:not-allowed}
+.abil-name{font-weight:600;font-size:13px;margin-bottom:4px}.abil-desc{color:var(--dim);font-size:12px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);padding:8px;display:flex;gap:4px}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:6px 4px;border-radius:8px;color:var(--dim);font-size:10px;text-decoration:none;border:none;background:none;cursor:pointer;transition:all .2s}
+.nav-item.active{background:var(--accent);color:#000}
+.nav-item span{display:block;margin-top:2px}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
 .modal.active{display:flex}
-.modal-box{background:var(--card);border-radius:12px;padding:16px;width:100%;max-width:320px;max-height:80vh;overflow-y:auto}
-.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.modal-title{font-size:16px;font-weight:700}.modal-close{width:28px;height:28px;background:var(--bg);border:none;border-radius:6px;color:var(--dim);cursor:pointer;font-size:16px}
-.nav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;background:var(--card);border-top:1px solid var(--border);display:flex;padding:6px}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px;background:none;border:none;color:var(--muted);cursor:pointer;border-radius:6px;font-size:10px}.nav-item.active{color:var(--accent)}
-.toggle{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim)}
-.toggle input{width:36px;height:20px;appearance:none;background:var(--bg);border-radius:10px;position:relative;cursor:pointer}
-.toggle input::after{content:'';position:absolute;width:16px;height:16px;background:var(--dim);border-radius:50%;top:2px;left:2px;transition:.2s}
-.toggle input:checked{background:var(--accent)}.toggle input:checked::after{left:18px;background:#fff}
+.modal-box{background:var(--card);border-radius:12px;max-width:100%;max-height:100%;overflow-y:auto;border:1px solid var(--border)}
+.modal-head{display:flex;align-items:center;padding:16px;border-bottom:1px solid var(--border)}
+.modal-title{flex:1;font-weight:600;font-size:16px}
+.modal-close{background:none;border:none;color:var(--dim);font-size:24px;cursor:pointer;padding:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px;margin:-4px -4px -4px 0}
+.modal-close:hover{background:var(--bg)}
+.mod-content{padding:16px}
+.craft-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.craft-item{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center}
+.craft-item.disabled{opacity:.4}
+.craft-icon{font-size:24px;margin-bottom:6px}
+.craft-name{font-size:12px;font-weight:600;margin-bottom:4px}
+.craft-cost{color:var(--accent);font-size:11px}
+.bank-grid{display:grid;gap:8px}
+.bank-item{display:flex;align-items:center;padding:10px;background:var(--bg);border-radius:8px}
+.bank-icon{width:32px;text-align:center;font-size:18px}
+.bank-info{flex:1}
+.bank-name{font-weight:600;font-size:13px;margin-bottom:2px}
+.bank-amt{color:var(--dim);font-size:11px}
+.bank-acts{display:flex;gap:4px}
+.auc-tabs{margin-bottom:16px}
+.auc-tab{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px;cursor:pointer}
+.auc-tab.active{background:var(--accent);color:#000;border-color:var(--accent)}
+.auc-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.auc-item{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center}
+.auc-icon{font-size:20px;margin-bottom:4px}
+.auc-name{font-size:12px;font-weight:600;margin-bottom:2px}
+.auc-price{color:var(--accent);font-size:11px}
+.auc-sell{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.auc-sell-item{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center}
+.inv-grid{display:grid;gap:12px}
+.inv-section{background:var(--bg);border-radius:8px;padding:12px}
+.inv-title{font-size:12px;font-weight:600;color:var(--dim);text-transform:uppercase;margin-bottom:8px}
+.inv-eq{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+.eq-slot{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:8px;text-align:center}
+.eq-label{font-size:10px;color:var(--dim);margin-bottom:4px}
+.eq-item{font-size:12px;padding:6px;border-radius:4px;background:var(--bg);cursor:pointer;border:1px solid transparent}
+.eq-item:hover{border-color:var(--border)}
+.inv-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px}
+.inv-item{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:8px;text-align:center;cursor:pointer}
+.inv-item:hover{background:var(--bg)}
+.inv-icon{font-size:16px;margin-bottom:4px}
+.inv-name{font-size:10px}
+.mast-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.mast-item{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+.mast-icon{font-size:24px;margin-bottom:6px}
+.mast-info{margin-bottom:8px}
+.mast-name{font-weight:600;font-size:13px;margin-bottom:2px}
+.mast-lv{color:var(--dim);font-size:11px}
+.mast-xp{}
+.xp-bar{height:6px;background:var(--card);border-radius:3px;overflow:hidden;margin-bottom:4px}
+.xp-fill{height:100%;background:var(--accent);border-radius:3px}
+.xp-text{font-size:10px;color:var(--dim)}
+.loc-list{display:grid;gap:8px}
+.loc-item{display:flex;align-items:center;padding:12px;background:var(--bg);border-radius:8px;border:1px solid var(--border)}
+.loc-item.locked{opacity:.6}
+.loc-item.current{border-color:var(--accent)}
+.loc-icon{width:40px;text-align:center;font-size:20px}
+.loc-info{flex:1}
+.loc-name{font-weight:600;font-size:14px;margin-bottom:2px}
+.loc-desc{color:var(--dim);font-size:12px}
+.loc-badge{margin-left:8px;padding:4px 8px;border-radius:10px;font-size:10px;font-weight:600;color:var(--ok);background:rgba(74,222,128,.2)}
+.loc-badge.locked{color:var(--bad);background:rgba(239,68,68,.2)}
 </style>
 </head>
 <body>
 <div class="hdr">
 <div class="avatar" id="avatar">👤</div>
-<div class="hdr-info"><div class="hdr-name" id="hdrName">Игрок</div><div class="bar"><div class="bar-fill bar-hp" id="hdrHp" style="width:100%"></div></div></div>
-<div class="gold">💰 <span id="hdrGold">150</span></div>
+<div class="hdr-info">
+<div class="hdr-name" id="hdrName">Игрок</div>
+<div class="bar bar-hp"><div class="bar-fill bar-hp" id="hdrHp" style="width:100%"></div></div>
 </div>
+<div class="gold" id="hdrGold">💰0</div>
+</div>
+
 <div class="main">
-<div class="screen active" id="sExplore">
+<div id="sExplore" class="screen active">
 <div class="card">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-<div><span id="locName" style="font-weight:700">Луга</span> <span class="badge badge-warn" id="locBadge">PvP</span></div>
-<span style="font-size:11px;color:var(--dim)" id="locTier">Ур.1</span>
-</div>
+<div class="card-title">Карта локации</div>
 <div class="map-view" id="mapView"></div>
+<div class="card-title">Действия</div>
 <button class="btn btn-p step-btn" id="stepBtn">
 <span class="step-prog" id="stepProg"></span>
 <span id="stepText">🚶 Сделать шаг</span>
 </button>
 </div>
-<div class="card event" id="eventCard"></div>
+
+<div class="card" id="eventCard" style="display:none"></div>
 <div class="card combat" id="combatCard" style="display:none">
-<div class="fighter"><div class="fighter-ava" id="cEnemyAva">🐺</div><div class="fighter-info"><div class="fighter-name" id="cEnemyName">Волк</div><div class="fighter-hp"><div class="fighter-hp-fill" id="cEnemyHp"></div><span class="fighter-hp-text" id="cEnemyHpTxt"></span></div></div></div>
-<div class="turn-indicator" id="turnInd">Ваш ход</div>
-<div class="fighter"><div class="fighter-ava">👤</div><div class="fighter-info"><div class="fighter-name">Вы</div><div class="fighter-hp"><div class="fighter-hp-fill" id="cPlayerHp"></div><span class="fighter-hp-text" id="cPlayerHpTxt"></span></div></div></div>
-<div class="abilities" id="abilGrid"></div>
-<div class="log" id="combatLog"></div>
+<div class="fighter">
+<div class="fighter-ava" id="cEnemyAva"></div>
+<div class="fighter-info">
+<div class="fighter-name" id="cEnemyName">Враг</div>
+<div class="fighter-hp"><div class="fighter-hp-fill" id="cEnemyHp" style="width:100%"></div></div>
+<div class="fighter-hp-txt" id="cEnemyHpTxt">100/100</div>
 </div>
 </div>
-<div class="screen" id="sInv">
-<div class="card"><div class="card-title">Экипировка</div><div class="eq-panel" id="eqPanel"></div></div>
-<div class="card"><div class="card-title">Ресурсы</div><div class="res-bar" id="resBar"></div></div>
-<div class="card"><div class="card-title">Инвентарь</div><div class="inv-grid" id="invGrid"></div></div>
+<div class="fighter">
+<div class="fighter-ava">🧙</div>
+<div class="fighter-info">
+<div class="fighter-name">Игрок</div>
+<div class="fighter-hp"><div class="fighter-hp-fill" id="cPlayerHp" style="width:100%"></div></div>
+<div class="fighter-hp-txt" id="cPlayerHpTxt">100/100</div>
 </div>
-<div class="screen" id="sMap"><div class="card"><div class="card-title">Локации</div><div id="locList"></div></div></div>
-<div class="screen" id="sCity">
-<div class="tabs" id="cityTabs"><button class="tab active" onclick="window.cityTab('craft')">Крафт</button><button class="tab" onclick="window.cityTab('bank')">Банк</button><button class="tab" onclick="window.cityTab('auc')">Аукцион</button></div>
-<div id="cityContent"></div>
 </div>
-<div class="screen" id="sMast"><div class="card"><div class="card-title">Мастерство</div><div id="mastList"></div></div></div>
+<div class="abils">
+<div class="card-title">Навыки</div>
+<div class="abil-grid" id="abilGrid"></div>
 </div>
+<div class="event-acts">
+<span id="turnInd">Ваш ход</span>
+</div>
+<div id="combatLog"></div>
+</div>
+</div>
+
+<div id="sInv" class="screen">
+<div class="card">
+<div class="card-title">Инвентарь</div>
+<div id="invGrid"></div>
+</div>
+</div>
+
+<div id="sMap" class="screen">
+<div class="card">
+<div class="card-title">Локации</div>
+<div class="loc-list" id="locList"></div>
+</div>
+</div>
+
+<div id="sCity" class="screen">
+<div class="card">
+<div class="card-title">Город</div>
+<div class="tabs">
+<button class="tab active" onclick="cityTab('craft')">Крафт</button>
+<button class="tab" onclick="cityTab('bank')">Банк</button>
+<button class="tab" onclick="cityTab('auc')">Аукцион</button>
+</div>
+<div id="cityCraft" class="city-panel active">
+<div class="craft-grid" id="craftGrid"></div>
+</div>
+<div id="cityBank" class="city-panel">
+<div class="bank-grid" id="bankResGrid"></div>
+<div style="height:20px"></div>
+<div class="bank-grid" id="bankItemsGrid"></div>
+</div>
+<div id="cityAuc" class="city-panel">
+<div class="auc-tabs" id="aucTabsGrid"></div>
+<div class="auc-items" id="aucItemsGrid"></div>
+<div style="height:20px"></div>
+<div class="auc-sell" id="aucSellGrid"></div>
+</div>
+</div>
+</div>
+
+<div id="sMast" class="screen">
+<div class="card">
+<div class="card-title">Мастерство</div>
+<div class="mast-grid" id="mastGrid"></div>
+</div>
+</div>
+</div>
+
 <div class="nav">
 <button class="nav-item active" onclick="nav('Explore',this)">🌍<span>Мир</span></button>
 <button class="nav-item" onclick="nav('Inv',this)">🎒<span>Сумка</span></button>
@@ -152,1241 +228,20 @@ body{max-width:480px;margin:0 auto;height:100vh;display:flex;flex-direction:colu
 <button class="nav-item" onclick="nav('City',this)">🏰<span>Город</span></button>
 <button class="nav-item" onclick="nav('Mast',this)">📊<span>Скилы</span></button>
 </div>
+
 <div class="modal" id="modal"><div class="modal-box"><div class="modal-head"><div class="modal-title" id="modTitle"></div><button class="modal-close" onclick="closeMod()">×</button></div><div id="modContent"></div></div></div>
-<script>
-// Объединенный код игры (конвертировано из ES6 модулей для совместимости)
 
-// ===== ИГРОВЫЕ ДАННЫЕ =====
-const LOCS = {
-  city: {
-    name: 'Город', icon: '🏰', tier: 0, pvp: 'safe', isCity: 1,
-    chunks: 1, // Город - 1 чанк
-    nextLoc: null, // Нет следующей локации
-    enemies: [], res: []
-  },
-  meadow: {
-    name: 'Луга', icon: '🌿', tier: 1, pvp: 'request',
-    chunks: 10, // 10 чанков
-    nextLoc: 'forest', // Следующая локация
-    enemies: ['slime', 'wolf'], res: ['wood', 'cloth']
-  },
-  forest: {
-    name: 'Лес', icon: '🌲', tier: 2, pvp: 'request',
-    chunks: 15, // 15 чанков
-    nextLoc: 'highlands',
-    enemies: ['wolf', 'bear'], res: ['wood', 'leather']
-  },
-  highlands: {
-    name: 'Высокогорье', icon: '⛰️', tier: 3, pvp: 'open',
-    chunks: 20, // 20 чанков
-    nextLoc: null, // Последняя локация
-    enemies: ['golem', 'harpy'], res: ['metal', 'leather']
-  }
-};
-
-const ENEMIES = {
-  slime: {name: 'Слизень', icon: '🟢', hp: 30, dmg: 5, xp: 10, loot: ['cloth']},
-  wolf: {name: 'Волк', icon: '🐺', hp: 50, dmg: 10, xp: 20, loot: ['leather']},
-  bear: {name: 'Медведь', icon: '🐻', hp: 80, dmg: 15, xp: 35, loot: ['leather', 'leather']},
-  golem: {name: 'Голем', icon: '🗿', hp: 120, dmg: 18, xp: 50, loot: ['metal', 'metal']},
-  harpy: {name: 'Гарпия', icon: '🦅', hp: 60, dmg: 20, xp: 45, loot: ['cloth']}
-};
-
-const PLAYERS = [
-  {name: 'Рыцарь_42', hp: 80, dmg: 15, loot: ['iron_sword']},
-  {name: 'MagicUser', hp: 60, dmg: 20, loot: ['wooden_staff']},
-  {name: 'Охотник', hp: 70, dmg: 18, loot: ['wooden_bow']}
-];
-
-const ITEMS = {
-  wooden_sword: {name: 'Деревянный меч', icon: '🗡️', slot: 'mainHand', ab: ['slash', 'block'], cat: 'sword', desc: 'Базовое оружие'},
-  iron_sword: {name: 'Железный меч', icon: '⚔️', slot: 'mainHand', ab: ['slash', 'parry'], cat: 'sword', desc: 'Улучшенный меч'},
-  wooden_bow: {name: 'Лук', icon: '🏹', slot: 'mainHand', ab: ['shoot', 'multishot'], cat: 'bow', two: 1, desc: 'Стреляет издалека'},
-  wooden_staff: {name: 'Посох', icon: '🪄', slot: 'mainHand', ab: ['fireball', 'heal'], cat: 'staff', two: 1, desc: 'Магическое оружие'},
-  wooden_shield: {name: 'Щит', icon: '🛡️', slot: 'offHand', ab: ['shieldblock'], cat: 'shield', desc: 'Блокирует урон'},
-  cloth_robe: {name: 'Роба', icon: '👘', slot: 'chest', ab: ['mana_shield'], cat: 'cloth', desc: 'Магическая броня'},
-  leather_armor: {name: 'Кожаная броня', icon: '🦺', slot: 'chest', ab: ['dodge'], cat: 'leather', desc: 'Баланс защиты'},
-  plate_armor: {name: 'Латы', icon: '🛡️', slot: 'chest', ab: ['fortify'], cat: 'plate', desc: 'Макс. защита'},
-  cloth_boots: {name: 'Тканевые сапоги', icon: '👟', slot: 'boots', ab: ['blink'], cat: 'cloth', desc: 'Телепортация'},
-  leather_boots: {name: 'Кожаные сапоги', icon: '🥾', slot: 'boots', ab: ['dash'], cat: 'leather', desc: 'Быстрый рывок'},
-  plate_boots: {name: 'Латные сапоги', icon: '🦶', slot: 'boots', ab: ['stomp'], cat: 'plate', desc: 'Оглушающий удар'},
-  pickaxe: {name: 'Кирка', icon: '⛏️', slot: 'tool', ab: [], cat: 'tool', desc: 'Для добычи руды'},
-  axe: {name: 'Топор', icon: '🪓', slot: 'tool', ab: [], cat: 'tool', desc: 'Для рубки дерева'},
-  sickle: {name: 'Серп', icon: '🌾', slot: 'tool', ab: [], cat: 'tool', desc: 'Для сбора волокон'},
-  skinning_knife: {name: 'Нож свежевателя', icon: '🔪', slot: 'tool', ab: [], cat: 'tool', desc: 'Для снятия кожи'}
-};
-
-const ABILS = {
-  punch: {name: 'Удар', icon: '👊', dmg: 5, desc: 'Без оружия'},
-  wait: {name: 'Ждать', icon: '⏳', heal: 5, desc: '+5 HP'},
-  slash: {name: 'Рубящий', icon: '⚔️', dmg: 15, desc: '15 урона'},
-  block: {name: 'Блок', icon: '🛡️', def: 20, desc: '20 защиты'},
-  parry: {name: 'Парирование', icon: '↩️', dmg: 10, def: 10, desc: '10 урона, 10 защиты'},
-  shoot: {name: 'Выстрел', icon: '🏹', dmg: 18, desc: '18 урона'},
-  multishot: {name: 'Залп', icon: '🎯', dmg: 24, desc: '24 урона'},
-  fireball: {name: 'Огнешар', icon: '🔥', dmg: 25, desc: '25 урона'},
-  heal: {name: 'Лечение', icon: '💚', heal: 30, desc: '+30 HP'},
-  shieldblock: {name: 'Блок щитом', icon: '🛡️', def: 25, desc: '25 защиты'},
-  mana_shield: {name: 'Мана-щит', icon: '🔮', def: 25, desc: '25 защиты'},
-  dodge: {name: 'Уклонение', icon: '💨', evade: 1, desc: 'Избежать удара'},
-  fortify: {name: 'Укрепление', icon: '🏰', def: 30, desc: '30 защиты'},
-  blink: {name: 'Телепорт', icon: '✨', dmg: 15, evade: 1, desc: '15 урона + уклон'},
-  dash: {name: 'Рывок', icon: '💨', dmg: 12, desc: '12 урона'},
-  stomp: {name: 'Топот', icon: '💥', dmg: 20, desc: '20 урона'}
-};
-
-const RECIPES = {
-  wooden_sword: {wood: 2, metal: 1}, iron_sword: {metal: 4, wood: 1},
-  wooden_bow: {wood: 3}, wooden_staff: {wood: 2, cloth: 1},
-  wooden_shield: {wood: 2, leather: 1}, cloth_robe: {cloth: 4},
-  leather_armor: {leather: 4}, plate_armor: {metal: 4, leather: 2},
-  cloth_boots: {cloth: 2}, leather_boots: {leather: 2},
-  plate_boots: {metal: 2, leather: 1}, pickaxe: {wood: 1, metal: 2},
-  axe: {wood: 1, metal: 2}, sickle: {wood: 1, metal: 1},
-  skinning_knife: {wood: 1, metal: 1}
-};
-
-const RES_ICON = {wood: '🪵', metal: '🧱', cloth: '🧶', leather: '🦴'};
-const RES_TOOL = {wood: 'axe', metal: 'pickaxe', cloth: 'sickle', leather: 'skinning_knife'};
-
-// ===== УПРАВЛЕНИЕ СОСТОЯНИЕМ ИГРЫ =====
-let S = null;
-let saveTimeout = null;
-
-function initGameState() {
-  const saved = localStorage.getItem('mmorpg_save');
-  if (saved) {
-    try {
-      const data = JSON.parse(saved);
-      if (data && data.p && typeof data.p.hp === 'number') {
-        // Миграция: если есть node, конвертируем в chunk
-        if (data.node !== undefined && data.chunk === undefined) {
-          data.chunk = data.node;
-          delete data.node;
-        }
-        // Если нет открытых локаций, открываем начальные
-        if (!data.openedLocs) {
-          data.openedLocs = ['city', 'meadow'];
-        }
-        // Если нет текущего чанка, ставим 0
-        if (data.chunk === undefined) {
-          data.chunk = 0;
-        }
-        S = data;
-        return;
-      }
-    } catch(e) {
-      console.error('Ошибка загрузки сохранения:', e);
-    }
-  }
-
-  // Начальные данные
-  S = {
-    p: {
-      hp: 100, maxHp: 100, gold: 150,
-      res: {wood: 8, metal: 5, cloth: 3, leather: 4},
-      inv: ['wooden_sword', 'leather_armor', 'pickaxe', 'axe', 'sickle', 'skinning_knife'],
-      eq: {mainHand: null, offHand: null, chest: null, boots: null, tool: null},
-      bank: {res: {wood: 10, metal: 0, cloth: 0, leather: 0}, items: ['cloth_robe']},
-      mast: {
-        sword: {lv: 3, xp: 45}, bow: {lv: 1, xp: 0}, staff: {lv: 2, xp: 80},
-        cloth: {lv: 1, xp: 20}, leather: {lv: 2, xp: 10}, plate: {lv: 1, xp: 0}
-      }
-    },
-    loc: 'meadow',
-    chunk: 0, // Текущий чанк в локации (0-based)
-    openedLocs: ['city', 'meadow'], // Открытые локации
-    combat: null,
-    event: null,
-    turn: 'player',
-    gatherLeft: 0,
-    traveling: null // {toLoc: 'forest', progress: 0, totalChunks: 15} - для быстрого перемещения
-  };
-}
-
-function saveGame() {
-  clearTimeout(saveTimeout);
-  saveTimeout = setTimeout(() => {
-    try {
-      localStorage.setItem('mmorpg_save', JSON.stringify(S));
-    } catch(e) {
-      console.error('Ошибка сохранения:', e);
-    }
-  }, 500);
-}
-
-// ===== UI ФУНКЦИИ =====
-function updHdr() {
-  const hpEl = document.getElementById('hdrHp');
-  const goldEl = document.getElementById('hdrGold');
-  if (hpEl) hpEl.style.width = (S.p.hp / S.p.maxHp * 100) + '%';
-  if (goldEl) goldEl.textContent = S.p.gold;
-  saveGame();
-}
-
-function nav(s, btn) {
-  document.querySelectorAll('.screen').forEach(x => x.classList.remove('active'));
-  const screen = document.getElementById('s' + s);
-  if (screen) screen.classList.add('active');
-
-  document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-
-  if (s === 'Inv') renderInv();
-  if (s === 'Map') renderLocList();
-  if (s === 'City') renderCity();
-  if (s === 'Mast') renderMast();
-}
-
-function closeMod() {
-  const modal = document.getElementById('modal');
-  if (modal) modal.classList.remove('active');
-}
-
-// ===== ДВИЖЕНИЕ =====
-let stepProgress = 0;
-let stepInterval = null;
-const STEP_TIME = 1000; // 1 секунда на шаг
-
-function renderMovementUI() {
-  const btn = document.getElementById('stepBtn');
-  const text = document.getElementById('stepText');
-  const prog = document.getElementById('stepProg');
-
-  if (!btn || !text) return;
-
-  const L = LOCS[S.loc];
-  if (!L) return;
-
-  // Если идёт быстрое перемещение
-  if (S.traveling) {
-    btn.style.display = '';
-    text.textContent = `🚶 Идём в ${LOCS[S.traveling.toLoc]?.name || S.traveling.toLoc}...`;
-    btn.onclick = null;
-    return;
-  }
-
-  // Если в городе
-  if (L.isCity) {
-    btn.style.display = 'none';
-    return;
-  }
-
-  btn.style.display = '';
-
-  const isLastChunk = S.chunk >= L.chunks - 1;
-
-  if (isLastChunk) {
-    // На последнем чанке - можно начать заново или перейти дальше
-    text.textContent = '🏁 Конец локации';
-    btn.onclick = () => showLocationEnd();
-  } else {
-    // Обычный шаг вперёд
-    text.textContent = `🚶 Сделать шаг (${S.chunk + 1}/${L.chunks})`;
-    btn.onclick = () => startStep();
-  }
-}
-
-function startStep() {
-  if (stepInterval || S.combat || S.traveling) return;
-
-  const L = LOCS[S.loc];
-  if (!L || S.chunk >= L.chunks) return;
-
-  stepProgress = 0;
-  stepInterval = setInterval(() => {
-    stepProgress += 50;
-    const prog = document.getElementById('stepProg');
-    if (prog) prog.style.width = (stepProgress / STEP_TIME * 100) + '%';
-
-    if (stepProgress >= STEP_TIME) {
-      stopStep();
-      S.chunk++;
-      saveGame();
-      renderMap();
-      genEvent();
-      renderMovementUI();
-    }
-  }, 50);
-}
-
-function stopStep() {
-  if (stepInterval) {
-    clearInterval(stepInterval);
-    stepInterval = null;
-  }
-  stepProgress = 0;
-  const prog = document.getElementById('stepProg');
-  if (prog) prog.style.width = '0';
-}
-
-function goTo(loc) {
-  if (!LOCS[loc]) return;
-  S.loc = loc;
-  S.chunk = 0;
-  saveGame();
-  renderMap();
-  const eventCard = document.getElementById('eventCard');
-  if (LOCS[loc].isCity) {
-    if (eventCard) eventCard.innerHTML = `<div class="event-icon res">🏰</div><div class="event-title">Город</div><p style="color:var(--dim);margin-top:8px">Используйте "Город" в меню</p>`;
-  } else {
-    genEvent();
-  }
-}
-
-function restartLocation() {
-  S.chunk = 0;
-  saveGame();
-  renderMap();
-  genEvent();
-  renderMovementUI();
-  closeMod();
-}
-
-function goToNextLocation() {
-  const L = LOCS[S.loc];
-  if (L && L.nextLoc) {
-    S.openedLocs.push(L.nextLoc);
-    goTo(L.nextLoc);
-  }
-  closeMod();
-}
-
-function fastTravel(targetLoc) {
-  if (S.traveling || !S.openedLocs.includes(targetLoc)) return;
-
-  // Подсчитываем общее количество чанков в пути
-  const currentLocIndex = S.openedLocs.indexOf(S.loc);
-  const targetLocIndex = S.openedLocs.indexOf(targetLoc);
-
-  let totalChunks = 0;
-  const start = Math.min(currentLocIndex, targetLocIndex);
-  const end = Math.max(currentLocIndex, targetLocIndex);
-
-  for (let i = start; i < end; i++) {
-    const loc = S.openedLocs[i];
-    if (LOCS[loc]) {
-      totalChunks += LOCS[loc].chunks;
-    }
-  }
-
-  S.traveling = {toLoc: targetLoc, progress: 0, totalChunks: totalChunks};
-  renderMovementUI();
-
-  // Имитируем быстрое перемещение
-  const travelInterval = setInterval(() => {
-    S.traveling.progress++;
-    if (S.traveling.progress >= S.traveling.totalChunks) {
-      clearInterval(travelInterval);
-      goTo(S.traveling.toLoc);
-      S.traveling = null;
-      renderMovementUI();
-    }
-  }, 200); // Каждые 200ms - один чанк
-}
-
-function showLocationEnd() {
-  const modTitle = document.getElementById('modTitle');
-  const modContent = document.getElementById('modContent');
-  const modal = document.getElementById('modal');
-
-  if (modTitle) modTitle.textContent = 'Конец локации';
-  if (modContent) {
-    const L = LOCS[S.loc];
-    let content = `<p style="margin-bottom:12px">Вы прошли ${L.name}!</p>`;
-
-    if (L.nextLoc) {
-      content += `<button class="btn btn-p" style="width:100%;margin-bottom:8px" onclick="goToNextLocation()">Продолжить в ${LOCS[L.nextLoc].name}</button>`;
-    }
-    content += `<button class="btn btn-s" style="width:100%" onclick="restartLocation()">Начать заново</button>`;
-
-    modContent.innerHTML = content;
-  }
-  if (modal) modal.classList.add('active');
-}
-
-// ===== РЕНДЕРИНГ КАРТЫ =====
-function renderMap() {
-  const L = LOCS[S.loc];
-  const mv = document.getElementById('mapView');
-  if (!mv || !L) return;
-
-  const nameEl = document.getElementById('locName');
-  const tierEl = document.getElementById('locTier');
-  const badgeEl = document.getElementById('locBadge');
-
-  if (nameEl) nameEl.textContent = L.name;
-  if (tierEl) tierEl.textContent = L.isCity ? 'Город' : 'Ур.' + L.tier;
-
-  if (badgeEl) {
-    badgeEl.className = 'badge ' + (L.pvp === 'safe' ? 'badge-ok' : L.pvp === 'request' ? 'badge-warn' : 'badge-bad');
-    badgeEl.textContent = L.pvp === 'safe' ? 'Безопасно' : L.pvp === 'request' ? 'PvP запрос' : '⚠️ PvP';
-  }
-
-  // Рендерим прогресс по локации (линейная полоса)
-  let h = '';
-
-  if (!L.isCity) {
-    // Прогресс-бар локации
-    const progress = ((S.chunk + 1) / L.chunks * 100);
-    h += `<div style="position:absolute;bottom:10px;left:10px;right:10px;height:8px;background:var(--bg);border-radius:4px;overflow:hidden">
-      <div style="height:100%;background:var(--accent);width:${progress}%;transition:width 0.3s"></div>
-    </div>`;
-
-    // Показываем текущий чанк
-    h += `<div style="position:absolute;bottom:25px;left:50%;transform:translateX(-50%);font-size:12px;color:var(--dim)">Чанк ${S.chunk + 1}/${L.chunks}</div>`;
-  }
-
-  // Иконка локации в центре
-  h += `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:64px">${L.icon}</div>`;
-
-  mv.innerHTML = h;
-  renderMovementUI();
-}
-
-// ===== СОБЫТИЯ =====
-function genEvent() {
-  const L = LOCS[S.loc];
-  if (!L || L.isCity || S.traveling) return;
-
-  const r = Math.random();
-  const c = document.getElementById('eventCard');
-  if (!c) return;
-
-  S.event = null;
-
-  if (r < 0.3 && L.enemies?.length) {
-    const ek = L.enemies[Math.floor(Math.random() * L.enemies.length)];
-    const e = ENEMIES[ek];
-    if (e) {
-      S.event = {type: 'enemy', key: ek, data: e};
-      c.innerHTML = `<div class="event-icon enemy">${e.icon}</div><div class="event-title">${e.name}</div><div class="event-stats"><span style="color:var(--hp)">❤️${e.hp}</span><span style="color:var(--bad)">⚔️${e.dmg}</span></div><div class="event-acts"><button class="btn btn-p" onclick="startCombat()">⚔️ Бой</button><button class="btn btn-s" onclick="genEvent()">Убежать</button></div>`;
-    }
-  } else if (r < 0.55 && L.res?.length) {
-    const rt = L.res[Math.floor(Math.random() * L.res.length)];
-    S.event = {type: 'res', rt, left: 4};
-    S.gatherLeft = 4;
-    renderGather();
-  } else if (r < 0.7 && L.pvp !== 'safe') {
-    const pl = PLAYERS[Math.floor(Math.random() * PLAYERS.length)];
-    if (pl) {
-      S.event = {type: 'player', data: pl};
-      let btns = `<button class="btn btn-s btn-sm" onclick="wave()">👋</button>`;
-      btns += L.pvp === 'open' ? `<button class="btn btn-d btn-sm" onclick="attackPlayer()">⚔️</button>` : `<button class="btn btn-s btn-sm" onclick="duel()">Дуэль</button>`;
-      c.innerHTML = `<div class="event-icon player">👤</div><div class="event-title">${pl.name}</div><div class="event-acts">${btns}</div>`;
-    }
-  } else {
-    c.innerHTML = `<div class="event-icon">🌿</div><div class="event-title">Пусто</div>`;
-  }
-}
-
-function wave() {
-  const c = document.getElementById('eventCard');
-  if (c) c.innerHTML += '<p style="color:var(--dim);margin-top:8px">👋</p>';
-}
-
-function duel() {
-  const c = document.getElementById('eventCard');
-  if (!c) return;
-  c.innerHTML = `<p style="color:var(--dim)">Ожидание...</p>`;
-  setTimeout(() => {
-    if (Math.random() > 0.5) {
-      attackPlayer();
-    } else {
-      if (c) c.innerHTML = `<p style="color:var(--bad)">Отказ</p>`;
-    }
-  }, 1000);
-}
-
-// ===== СБОР РЕСУРСОВ =====
-function renderGather() {
-  const rt = S.event?.rt;
-  if (!rt || !RES_ICON[rt]) return;
-
-  const c = document.getElementById('eventCard');
-  if (!c) return;
-
-  c.innerHTML = `<div class="event-icon res">${RES_ICON[rt]}</div><div class="event-title">Сбор ${rt === 'wood' ? 'дерева' : rt === 'metal' ? 'руды' : rt === 'cloth' ? 'волокон' : 'кожи'}</div><div class="event-stats"><span style="color:var(--accent)">Осталось: ${S.gatherLeft}</span></div><div class="event-acts"><button class="btn btn-p" id="gatherBtn" onmousedown="startGather()" onmouseup="stopGather()" onmouseleave="stopGather()">Собирать</button></div>`;
-}
-
-let gatherInterval = null;
-let gatherProgress = 0;
-const GATHER_TIME = 1000;
-
-function startGather() {
-  if (gatherInterval || !S.event?.rt) return;
-
-  gatherProgress = 0;
-  gatherInterval = setInterval(() => {
-    gatherProgress += 50;
-    const prog = document.getElementById('stepProg');
-    if (prog) prog.style.width = (gatherProgress / GATHER_TIME * 100) + '%';
-
-    if (gatherProgress >= GATHER_TIME) {
-      stopGather();
-      S.gatherLeft--;
-
-      const rt = S.event.rt;
-      if (S.p.res[rt] !== undefined) {
-        S.p.res[rt]++;
-      }
-
-      if (S.gatherLeft <= 0) {
-        S.event = null;
-        genEvent();
-      } else {
-        renderGather();
-      }
-
-      updHdr();
-      saveGame();
-    }
-  }, 50);
-}
-
-function stopGather() {
-  if (gatherInterval) {
-    clearInterval(gatherInterval);
-    gatherInterval = null;
-  }
-  gatherProgress = 0;
-  const prog = document.getElementById('stepProg');
-  if (prog) prog.style.width = '0';
-}
-
-// ===== БОЙ =====
-function attackPlayer() {
-  if (!S.event?.data) return;
-  const pl = S.event.data;
-  S.combat = {...pl, hp: pl.hp, maxHp: pl.hp, isPvP: 1};
-  startCombatUI();
-}
-
-function startCombat() {
-  if (!S.event?.data) return;
-  const e = S.event.data;
-  S.combat = {...e, hp: e.hp, maxHp: e.hp};
-  startCombatUI();
-}
-
-function startCombatUI() {
-  const eventCard = document.getElementById('eventCard');
-  const combatCard = document.getElementById('combatCard');
-  const enemyAva = document.getElementById('cEnemyAva');
-  const enemyName = document.getElementById('cEnemyName');
-  const turnInd = document.getElementById('turnInd');
-  const combatLog = document.getElementById('combatLog');
-
-  if (eventCard) eventCard.style.display = 'none';
-  if (combatCard) combatCard.style.display = 'block';
-  if (enemyAva) enemyAva.textContent = S.combat.icon || '👤';
-  if (enemyName) enemyName.textContent = S.combat.name;
-
-  S.turn = 'player';
-  updCombat();
-  renderAbils();
-  if (combatLog) combatLog.innerHTML = '';
-  if (turnInd) turnInd.textContent = 'Ваш ход';
-}
-
-function updCombat() {
-  const c = S.combat;
-  if (!c) return;
-
-  const enemyHp = document.getElementById('cEnemyHp');
-  const enemyHpTxt = document.getElementById('cEnemyHpTxt');
-  const playerHp = document.getElementById('cPlayerHp');
-  const playerHpTxt = document.getElementById('cPlayerHpTxt');
-
-  if (enemyHp) enemyHp.style.width = (c.hp / c.maxHp * 100) + '%';
-  if (enemyHpTxt) enemyHpTxt.textContent = `${Math.max(0, c.hp)}/${c.maxHp}`;
-  if (playerHp) playerHp.style.width = (S.p.hp / S.p.maxHp * 100) + '%';
-  if (playerHpTxt) playerHpTxt.textContent = `${S.p.hp}/${S.p.maxHp}`;
-
-  updHdr();
-}
-
-function renderAbils() {
-  const eq = S.p.eq;
-  let abs = [];
-
-  if (eq.mainHand && ITEMS[eq.mainHand]) {
-    ITEMS[eq.mainHand].ab.forEach(a => abs.push({key: a, ...ABILS[a]}));
-  } else {
-    abs.push({key: 'punch', ...ABILS.punch});
-  }
-
-  if (eq.offHand && ITEMS[eq.offHand]) {
-    ITEMS[eq.offHand].ab.forEach(a => abs.push({key: a, ...ABILS[a]}));
-  }
-  if (eq.chest && ITEMS[eq.chest]) {
-    ITEMS[eq.chest].ab.forEach(a => abs.push({key: a, ...ABILS[a]}));
-  }
-  if (eq.boots && ITEMS[eq.boots]) {
-    ITEMS[eq.boots].ab.forEach(a => abs.push({key: a, ...ABILS[a]}));
-  }
-
-  while (abs.length < 4) abs.push({key: 'wait', ...ABILS.wait});
-  abs = abs.slice(0, 4);
-
-  const grid = document.getElementById('abilGrid');
-  if (!grid) return;
-
-  grid.innerHTML = abs.map(a =>
-    `<button class="abil-btn" onclick="useAbil('${a.key}')" ${S.turn !== 'player' ? 'disabled' : ''}>
-      <div class="abil-name">${a.icon} ${a.name}</div>
-      <div class="abil-desc">${a.desc}</div>
-    </button>`
-  ).join('');
-}
-
-function useAbil(k) {
-  if (S.turn !== 'player' || !S.combat) return;
-
-  const a = ABILS[k];
-  const c = S.combat;
-  const log = document.getElementById('combatLog');
-  const turnInd = document.getElementById('turnInd');
-
-  if (!a || !c) return;
-
-  S.turn = 'wait';
-  if (turnInd) turnInd.textContent = '...';
-  renderAbils();
-
-  setTimeout(() => {
-    if (a.dmg) {
-      c.hp -= a.dmg;
-      if (log) log.innerHTML += `<div class="log-dmg">→${a.name}: ${a.dmg}</div>`;
-    }
-    if (a.heal) {
-      S.p.hp = Math.min(S.p.maxHp, S.p.hp + a.heal);
-      if (log) log.innerHTML += `<div class="log-heal">→${a.name}: +${a.heal}</div>`;
-    }
-
-    updCombat();
-    saveGame();
-
-    if (c.hp <= 0) {
-      endCombat(1);
-      return;
-    }
-
-    S.turn = 'enemy';
-    if (turnInd) turnInd.textContent = 'Ход врага';
-
-    setTimeout(() => {
-      const dmg = c.dmg || 10;
-      S.p.hp -= dmg;
-      if (log) log.innerHTML += `<div class="log-dmg">←${c.name}: ${dmg}</div>`;
-      updCombat();
-
-      if (S.p.hp <= 0) {
-        S.p.hp = 1;
-        endCombat(0);
-        return;
-      }
-
-      S.turn = 'player';
-      if (turnInd) turnInd.textContent = 'Ваш ход';
-      renderAbils();
-    }, 1000);
-  }, 500);
-}
-
-function endCombat(won) {
-  const eventCard = document.getElementById('eventCard');
-  const combatCard = document.getElementById('combatCard');
-  const log = document.getElementById('combatLog');
-
-  if (combatCard) combatCard.style.display = 'none';
-  if (eventCard) eventCard.style.display = 'block';
-
-  if (won) {
-    let loot = '';
-    const hasKnife = S.p.inv.includes('skinning_knife') || S.p.eq.tool === 'skinning_knife';
-
-    const c = S.combat;
-    if (c.xp) {
-      const cat = S.p.eq.mainHand && ITEMS[S.p.eq.mainHand]?.cat || 'sword';
-      if (!S.p.mast[cat]) S.p.mast[cat] = {lv: 1, xp: 0};
-      S.p.mast[cat].xp += c.xp;
-      while (S.p.mast[cat].xp >= S.p.mast[cat].lv * 50) {
-        S.p.mast[cat].xp -= S.p.mast[cat].lv * 50;
-        S.p.mast[cat].lv++;
-      }
-    }
-    if (c.loot) {
-      c.loot.forEach(l => {
-        if (ITEMS[l]) {
-          S.p.inv.push(l);
-          loot += `<div>🎁${ITEMS[l].name}</div>`;
-        } else if (l === 'leather') {
-          if (hasKnife) {
-            S.p.res.leather++;
-            loot += `<div>${RES_ICON.leather}+1</div>`;
-          } else {
-            loot += `<div style="color:var(--muted)">Нужен нож для кожи</div>`;
-          }
-        } else {
-          if (S.p.res[l] !== undefined) {
-            S.p.res[l]++;
-            loot += `<div>${RES_ICON[l]}+1</div>`;
-          }
-        }
-      });
-    }
-
-    const gold = Math.floor(Math.random() * 15) + 5;
-    S.p.gold += gold;
-
-    if (eventCard) {
-      eventCard.innerHTML = `<div class="event-icon res">🎉</div><div class="event-title">Победа!</div><div style="color:var(--ok);margin:8px">${loot}<div style="color:var(--accent)">💰+${gold}</div></div>`;
-    }
-  } else {
-    const c = S.combat;
-    const isPvP = c?.isPvP;
-    const L = LOCS[S.loc];
-
-    if (isPvP && L?.pvp === 'open') {
-      S.p.eq = {mainHand: null, offHand: null, chest: null, boots: null, tool: null};
-      S.p.inv = [];
-      S.p.res = {wood: 0, metal: 0, cloth: 0, leather: 0};
-      if (eventCard) eventCard.innerHTML = `<div class="event-icon enemy">💀</div><div class="event-title">PvP смерть!</div><p style="color:var(--bad)">Всё потеряно!</p>`;
-    } else {
-      if (log) log.innerHTML += `<div class="log-dmg">Поражение...</div>`;
-    }
-    S.p.hp = Math.floor(S.p.maxHp * 0.5);
-    goTo('city');
-  }
-
-  S.combat = null;
-  S.event = null;
-  saveGame();
-  genEvent();
-}
-
-// ===== ЛОКАЦИИ =====
-function renderLocList() {
-  const list = document.getElementById('locList');
-  if (!list) return;
-
-  let h = '';
-  for (const [k, L] of Object.entries(LOCS)) {
-    const canGo = k === 'city' || S.openedLocs.includes(k);
-    const isCurrent = k === S.loc;
-
-    h += `<div class="loc-item ${!canGo ? 'locked' : isCurrent ? 'current' : ''}" onclick="${canGo ? `goTo('${k}')` : ''}">
-      <div class="loc-icon">${L.icon}</div>
-      <div class="loc-info">
-        <div class="loc-name">${L.name}</div>
-        <div class="loc-desc">${L.isCity ? 'Город' : `Уровень ${L.tier}`}</div>
-      </div>
-      ${canGo ? (isCurrent ? '<div class="loc-badge">Текущая</div>' : `<button class="btn btn-s btn-sm" onclick="fastTravel('${k}'); event.stopPropagation()">🚀</button>`) : '<div class="loc-badge locked">🔒</div>'}
-    </div>`;
-  }
-  list.innerHTML = h;
-}
-
-// ===== ГОРОД =====
-function renderCity() {
-  cityTab('craft');
-}
-
-function cityTab(t) {
-  document.querySelectorAll('.city-tab').forEach(x => x.classList.remove('active'));
-  document.querySelectorAll('.city-panel').forEach(x => x.classList.remove('active'));
-
-  const tab = document.querySelector(`[onclick="cityTab('${t}')"]`);
-  const panel = document.getElementById('city' + t.charAt(0).toUpperCase() + t.slice(1));
-
-  if (tab) tab.classList.add('active');
-  if (panel) panel.classList.add('active');
-
-  if (t === 'craft') renderCraft();
-  if (t === 'bank') renderBank();
-  if (t === 'auc') renderAuc();
-}
-
-function renderCraft() {
-  const grid = document.getElementById('craftGrid');
-  if (!grid) return;
-
-  let h = '';
-  for (const [k, r] of Object.entries(RECIPES)) {
-    const it = ITEMS[k];
-    if (!it) continue;
-
-    // Проверяем, есть ли все ресурсы
-    let canCraft = true;
-    let cost = '';
-    for (const [res, amt] of Object.entries(r)) {
-      cost += `${RES_ICON[res]}${amt} `;
-      if ((S.p.res[res] || 0) < amt) canCraft = false;
-    }
-
-    h += `<div class="craft-item ${!canCraft ? 'disabled' : ''}">
-      <div class="craft-icon">${it.icon}</div>
-      <div class="craft-info">
-        <div class="craft-name">${it.name}</div>
-        <div class="craft-cost">${cost.trim()}</div>
-      </div>
-      <button class="btn btn-p btn-sm" onclick="craft('${k}')" ${!canCraft ? 'disabled' : ''}>Создать</button>
-    </div>`;
-  }
-  grid.innerHTML = h;
-}
-
-function craft(k) {
-  const r = RECIPES[k];
-  if (!r) return;
-
-  // Проверяем ресурсы
-  for (const [res, amt] of Object.entries(r)) {
-    if ((S.p.res[res] || 0) < amt) return;
-  }
-
-  // Тратим ресурсы
-  for (const [res, amt] of Object.entries(r)) {
-    S.p.res[res] -= amt;
-  }
-
-  // Добавляем предмет
-  S.p.inv.push(k);
-  renderCraft();
-  renderInv();
-  updHdr();
-  saveGame();
-}
-
-// ===== БАНК =====
-function renderBank() {
-  renderBankRes();
-  renderBankItems();
-}
-
-function renderBankRes() {
-  const grid = document.getElementById('bankResGrid');
-  if (!grid) return;
-
-  let h = '';
-  for (const [res, amt] of Object.entries(S.p.res)) {
-    const icon = RES_ICON[res];
-    const bankAmt = S.p.bank.res[res] || 0;
-
-    h += `<div class="bank-item">
-      <div class="bank-icon">${icon}</div>
-      <div class="bank-info">
-        <div class="bank-name">${res === 'wood' ? 'Дерево' : res === 'metal' ? 'Металл' : res === 'cloth' ? 'Ткань' : 'Кожа'}</div>
-        <div class="bank-amt">У вас: ${amt} | В банке: ${bankAmt}</div>
-      </div>
-      <div class="bank-acts">
-        <button class="btn btn-s btn-sm" onclick="depositRes('${res}')" ${amt <= 0 ? 'disabled' : ''}>→</button>
-        <button class="btn btn-s btn-sm" onclick="withdrawRes('${res}')" ${bankAmt <= 0 ? 'disabled' : ''}>←</button>
-      </div>
-    </div>`;
-  }
-  grid.innerHTML = h;
-}
-
-function depositRes(res) {
-  if (S.p.res[res] <= 0) return;
-  S.p.res[res]--;
-  S.p.bank.res[res] = (S.p.bank.res[res] || 0) + 1;
-  renderBankRes();
-  saveGame();
-}
-
-function withdrawRes(res) {
-  const bankAmt = S.p.bank.res[res] || 0;
-  if (bankAmt <= 0) return;
-  S.p.res[res] = (S.p.res[res] || 0) + 1;
-  S.p.bank.res[res]--;
-  renderBankRes();
-  saveGame();
-}
-
-function renderBankItems() {
-  const grid = document.getElementById('bankItemsGrid');
-  if (!grid) return;
-
-  let h = '';
-  const allItems = [...new Set([...S.p.inv, ...S.p.bank.items])];
-
-  for (const ik of allItems) {
-    const it = ITEMS[ik];
-    if (!it) continue;
-
-    const invCount = S.p.inv.filter(i => i === ik).length;
-    const bankCount = S.p.bank.items.filter(i => i === ik).length;
-
-    h += `<div class="bank-item">
-      <div class="bank-icon">${it.icon}</div>
-      <div class="bank-info">
-        <div class="bank-name">${it.name}</div>
-        <div class="bank-amt">У вас: ${invCount} | В банке: ${bankCount}</div>
-      </div>
-      <div class="bank-acts">
-        <button class="btn btn-s btn-sm" onclick="depositItem('${ik}')" ${invCount <= 0 ? 'disabled' : ''}>→</button>
-        <button class="btn btn-s btn-sm" onclick="withdrawItem('${ik}')" ${bankCount <= 0 ? 'disabled' : ''}>←</button>
-      </div>
-    </div>`;
-  }
-  grid.innerHTML = h;
-}
-
-function depositItem(ik) {
-  const idx = S.p.inv.indexOf(ik);
-  if (idx === -1) return;
-
-  S.p.inv.splice(idx, 1);
-  S.p.bank.items.push(ik);
-  renderBankItems();
-  renderInv();
-  saveGame();
-}
-
-function withdrawItem(ik) {
-  const idx = S.p.bank.items.indexOf(ik);
-  if (idx === -1) return;
-
-  S.p.bank.items.splice(idx, 1);
-  S.p.inv.push(ik);
-  renderBankItems();
-  renderInv();
-  saveGame();
-}
-
-// ===== АУКЦИОН =====
-function renderAuc() {
-  renderAucItems();
-  renderAucSell();
-}
-
-function renderAucItems() {
-  const grid = document.getElementById('aucItemsGrid');
-  if (!grid) return;
-
-  let h = '<div class="auc-tabs">';
-  const cats = ['all', 'weapon', 'armor', 'tool'];
-  for (const cat of cats) {
-    h += `<button class="auc-tab" onclick="toggleAucGroup('${cat}')">${cat === 'all' ? 'Все' : cat === 'weapon' ? 'Оружие' : cat === 'armor' ? 'Броня' : 'Инструменты'}</button>`;
-  }
-  h += '</div>';
-
-  h += '<div class="auc-items" id="aucItems">';
-  // Здесь будут товары
-  h += '</div>';
-
-  grid.innerHTML = h;
-  toggleAucGroup('all');
-}
-
-function toggleAucGroup(cat) {
-  document.querySelectorAll('.auc-tab').forEach(x => x.classList.remove('active'));
-  const tab = Array.from(document.querySelectorAll('.auc-tab')).find(x => x.textContent === (cat === 'all' ? 'Все' : cat === 'weapon' ? 'Оружие' : cat === 'armor' ? 'Броня' : 'Инструменты'));
-  if (tab) tab.classList.add('active');
-
-  const items = document.getElementById('aucItems');
-  if (!items) return;
-
-  let h = '';
-  const aucItems = [
-    {item: 'iron_sword', price: 25},
-    {item: 'wooden_bow', price: 15},
-    {item: 'cloth_robe', price: 20},
-    {item: 'leather_armor', price: 30},
-    {item: 'pickaxe', price: 10}
-  ];
-
-  for (const ai of aucItems) {
-    const it = ITEMS[ai.item];
-    if (!it) continue;
-
-    let show = cat === 'all';
-    if (!show) {
-      if (cat === 'weapon' && (it.slot === 'mainHand' || it.slot === 'offHand')) show = true;
-      if (cat === 'armor' && (it.slot === 'chest' || it.slot === 'boots')) show = true;
-      if (cat === 'tool' && it.slot === 'tool') show = true;
-    }
-
-    if (show) {
-      h += `<div class="auc-item">
-        <div class="auc-icon">${it.icon}</div>
-        <div class="auc-info">
-          <div class="auc-name">${it.name}</div>
-          <div class="auc-price">💰${ai.price}</div>
-        </div>
-        <button class="btn btn-p btn-sm" onclick="buyAuc('${ai.item}', ${ai.price})" ${S.p.gold < ai.price ? 'disabled' : ''}>Купить</button>
-      </div>`;
-    }
-  }
-  items.innerHTML = h;
-}
-
-function renderAucSell() {
-  const grid = document.getElementById('aucSellGrid');
-  if (!grid) return;
-
-  let h = '';
-  for (const ik of S.p.inv) {
-    const it = ITEMS[ik];
-    if (!it) continue;
-
-    h += `<div class="auc-sell-item">
-      <div class="auc-icon">${it.icon}</div>
-      <div class="auc-info">
-        <div class="auc-name">${it.name}</div>
-        <div class="auc-price">💰${Math.floor(Math.random() * 10) + 5}</div>
-      </div>
-      <button class="btn btn-s btn-sm" onclick="showSell('${ik}')">Продать</button>
-    </div>`;
-  }
-  grid.innerHTML = h;
-}
-
-function showSell(ik) {
-  const modTitle = document.getElementById('modTitle');
-  const modContent = document.getElementById('modContent');
-  const modal = document.getElementById('modal');
-
-  const it = ITEMS[ik];
-  const price = Math.floor(Math.random() * 10) + 5;
-
-  if (modTitle) modTitle.textContent = 'Продажа';
-  if (modContent) modContent.innerHTML = `
-    <p>Продать ${it.icon} ${it.name} за 💰${price}?</p>
-    <button class="btn btn-p" onclick="sellAuc('${ik}', ${price})">Да</button>
-    <button class="btn btn-s" onclick="closeMod()">Нет</button>
-  `;
-  if (modal) modal.classList.add('active');
-}
-
-function sellAuc(ik, price) {
-  const idx = S.p.inv.indexOf(ik);
-  if (idx === -1) return;
-
-  S.p.inv.splice(idx, 1);
-  S.p.gold += price;
-  renderAucSell();
-  renderInv();
-  updHdr();
-  closeMod();
-  saveGame();
-}
-
-function buyAuc(ik, price) {
-  if (S.p.gold < price) return;
-
-  S.p.gold -= price;
-  S.p.inv.push(ik);
-  toggleAucGroup(document.querySelector('.auc-tab.active')?.textContent === 'Все' ? 'all' : document.querySelector('.auc-tab.active')?.textContent === 'Оружие' ? 'weapon' : document.querySelector('.auc-tab.active')?.textContent === 'Броня' ? 'armor' : 'tool');
-  renderInv();
-  updHdr();
-  saveGame();
-}
-
-// ===== ИНВЕНТАРЬ =====
-function renderInv() {
-  const grid = document.getElementById('invGrid');
-  if (!grid) return;
-
-  let h = '';
-  const eq = S.p.eq;
-
-  // Экипировка
-  h += `<div class="inv-section">
-    <div class="inv-title">Экипировка</div>
-    <div class="inv-eq">
-      <div class="eq-slot">
-        <div class="eq-label">Главная рука</div>
-        <div class="eq-item" onclick="itemMod('${eq.mainHand || ''}', -1)">
-          ${eq.mainHand ? ITEMS[eq.mainHand].icon + ' ' + ITEMS[eq.mainHand].name : 'Пусто'}
-        </div>
-      </div>
-      <div class="eq-slot">
-        <div class="eq-label">Вторая рука</div>
-        <div class="eq-item" onclick="itemMod('${eq.offHand || ''}', -1)">
-          ${eq.offHand ? ITEMS[eq.offHand].icon + ' ' + ITEMS[eq.offHand].name : 'Пусто'}
-        </div>
-      </div>
-      <div class="eq-slot">
-        <div class="eq-label">Броня</div>
-        <div class="eq-item" onclick="itemMod('${eq.chest || ''}', -1)">
-          ${eq.chest ? ITEMS[eq.chest].icon + ' ' + ITEMS[eq.chest].name : 'Пусто'}
-        </div>
-      </div>
-      <div class="eq-slot">
-        <div class="eq-label">Обувь</div>
-        <div class="eq-item" onclick="itemMod('${eq.boots || ''}', -1)">
-          ${eq.boots ? ITEMS[eq.boots].icon + ' ' + ITEMS[eq.boots].name : 'Пусто'}
-        </div>
-      </div>
-      <div class="eq-slot">
-        <div class="eq-label">Инструмент</div>
-        <div class="eq-item" onclick="itemMod('${eq.tool || ''}', -1)">
-          ${eq.tool ? ITEMS[eq.tool].icon + ' ' + ITEMS[eq.tool].name : 'Пусто'}
-        </div>
-      </div>
-    </div>
-  </div>`;
-
-  // Инвентарь
-  h += `<div class="inv-section">
-    <div class="inv-title">Инвентарь</div>
-    <div class="inv-items">`;
-
-  for (let i = 0; i < S.p.inv.length; i++) {
-    const ik = S.p.inv[i];
-    const it = ITEMS[ik];
-    if (!it) continue;
-
-    h += `<div class="inv-item" onclick="itemMod('${ik}', ${i})">
-      <div class="inv-icon">${it.icon}</div>
-      <div class="inv-name">${it.name}</div>
-    </div>`;
-  }
-
-  h += `</div></div>`;
-  grid.innerHTML = h;
-}
-
-function itemMod(ik, idx) {
-  if (!ik) return;
-
-  const it = ITEMS[ik];
-  if (!it) return;
-
-  const modTitle = document.getElementById('modTitle');
-  const modContent = document.getElementById('modContent');
-  const modal = document.getElementById('modal');
-
-  if (modTitle) modTitle.textContent = it.name;
-  if (modContent) {
-    let content = `<div style="text-align:center;margin-bottom:16px">${it.icon} ${it.name}</div>`;
-    content += `<div style="color:var(--dim);margin-bottom:16px">${it.desc}</div>`;
-
-    if (it.slot) {
-      const isEquipped = S.p.eq[it.slot] === ik;
-      content += `<button class="btn ${isEquipped ? 'btn-s' : 'btn-p'}" onclick="${isEquipped ? 'unequip' : 'equip'}('${ik}')">${isEquipped ? 'Снять' : 'Надеть'}</button>`;
-    }
-
-    if (idx >= 0) {
-      content += `<button class="btn btn-d" onclick="S.p.inv.splice(${idx}, 1); renderInv(); saveGame(); closeMod()">Выбросить</button>`;
-    }
-
-    modContent.innerHTML = content;
-  }
-  if (modal) modal.classList.add('active');
-}
-
-function equip(ik) {
-  const it = ITEMS[ik];
-  if (!it || !it.slot) return;
-
-  S.p.eq[it.slot] = ik;
-  renderInv();
-  updHdr();
-  closeMod();
-  saveGame();
-}
-
-function unequip(ik) {
-  const it = ITEMS[ik];
-  if (!it || !it.slot) return;
-
-  S.p.eq[it.slot] = null;
-  renderInv();
-  updHdr();
-  closeMod();
-  saveGame();
-}
-
-// ===== МАСТЕРСТВО =====
-function renderMast() {
-  const grid = document.getElementById('mastGrid');
-  if (!grid) return;
-
-  let h = '';
-  const cats = {
-    sword: 'Меч', bow: 'Лук', staff: 'Посох',
-    cloth: 'Ткань', leather: 'Кожа', plate: 'Латы'
-  };
-
-  for (const [k, name] of Object.entries(cats)) {
-    const m = S.p.mast[k] || {lv: 1, xp: 0};
-    const nextXp = m.lv * 50;
-
-    h += `<div class="mast-item">
-      <div class="mast-icon">${k === 'sword' ? '⚔️' : k === 'bow' ? '🏹' : k === 'staff' ? '🪄' : k === 'cloth' ? '👘' : k === 'leather' ? '🦺' : '🛡️'}</div>
-      <div class="mast-info">
-        <div class="mast-name">${name}</div>
-        <div class="mast-lv">Уровень ${m.lv}</div>
-      </div>
-      <div class="mast-xp">
-        <div class="xp-bar">
-          <div class="xp-fill" style="width:${(m.xp / nextXp * 100)}%"></div>
-        </div>
-        <div class="xp-text">${m.xp}/${nextXp}</div>
-      </div>
-    </div>`;
-  }
-  grid.innerHTML = h;
-}
-
-// ===== ИНИЦИАЛИЗАЦИЯ =====
-let tg = null;
-
-function initTelegram() {
-  if (window.Telegram?.WebApp) {
-    tg = window.Telegram.WebApp;
-    tg.ready();
-    tg.expand();
-    tg.setHeaderColor('#23272f');
-    tg.setBackgroundColor('#1a1d23');
-  }
-  return tg;
-}
-
-function updatePlayerName() {
-  if (tg?.initDataUnsafe?.user) {
-    const user = tg.initDataUnsafe.user;
-    const nameEl = document.getElementById('hdrName');
-    const avatarEl = document.getElementById('avatar');
-    if (nameEl) nameEl.textContent = user.first_name || 'Игрок';
-    if (avatarEl) avatarEl.textContent = user.first_name?.[0] || '👤';
-  }
-}
-
-function initGame() {
-  try {
-    initGameState();
-    initTelegram();
-    updatePlayerName();
-    updHdr();
-    renderMap();
-    genEvent();
-
-    // Убедимся, что экран исследования активен
-    document.querySelectorAll('.screen').forEach(x => x.classList.remove('active'));
-    const exploreScreen = document.getElementById('sExplore');
-    if (exploreScreen) {
-      exploreScreen.classList.add('active');
-    }
-  } catch (error) {
-    console.error("Ошибка инициализации игры:", error);
-    const modTitle = document.getElementById('modTitle');
-    const modContent = document.getElementById('modContent');
-    const modal = document.getElementById('modal');
-
-    if (modTitle) modTitle.textContent = 'Ошибка';
-    if (modContent) modContent.innerHTML = `<p style="color:var(--bad);">${error.message}</p><button class="btn btn-p" style="width:100%;margin-top:12px" onclick="closeMod()">ОК</button>`;
-    if (modal) modal.classList.add('active');
-  }
-}
-
-// Инициализация при загрузке DOM
-document.addEventListener('DOMContentLoaded', initGame);
+<script type="module">
+// Импорт модулей
+import { initGame } from './js/init.js';
+import { S } from './js/gameState.js';
+import { startStep, stopStep, fastTravel } from './js/movement.js';
+import { cityTab, renderCity } from './js/city.js';
+import { nav } from './js/ui.js';
+import { renderInv } from './js/inventory.js';
+import { renderLocList } from './js/locations.js';
+import { renderMast } from './js/mastery.js';
+import { wave, duel } from './js/events.js';
 
 // Глобальные функции для HTML
 window.cityTab = cityTab;
@@ -1399,52 +254,14 @@ window.renderCity = renderCity;
 window.renderMast = renderMast;
 window.wave = wave;
 window.duel = duel;
-window.genEvent = genEvent;
-window.startCombat = startCombat;
-window.attackPlayer = attackPlayer;
-window.useAbil = useAbil;
-window.goTo = goTo;
 window.fastTravel = fastTravel;
-window.restartLocation = restartLocation;
-window.goToNextLocation = goToNextLocation;
-window.craft = craft;
-window.depositRes = depositRes;
-window.withdrawRes = withdrawRes;
-window.depositItem = depositItem;
-window.withdrawItem = withdrawItem;
-window.toggleAucGroup = toggleAucGroup;
-window.showSell = showSell;
-window.sellAuc = sellAuc;
-window.buyAuc = buyAuc;
-window.itemMod = itemMod;
-window.equip = equip;
-window.unequip = unequip;
-window.closeMod = closeMod;
+
+// Инициализация игры
+initGame();
 </script>
 <script>
 // Утилита для обратной совместимости
 const $ = id => document.getElementById(id);
-</script>
-  city: {name: 'Город', icon: '🏰', tier: 0, pvp: 'safe', isCity: 1, nodes: [{x: 50, y: 50}], paths: [], exits: {}},
-  meadow: {name: 'Луга', icon: '🌿', tier: 1, pvp: 'request', nodes: [{x: 20, y: 80}, {x: 40, y: 60}, {x: 60, y: 40}, {x: 50, y: 70}, {x: 80, y: 30}], paths: [[0, 1], [1, 2], [1, 3], [2, 4], [3, 4]], enemies: ['slime', 'wolf'], res: ['wood', 'cloth'], exits: {4: 'forest'}},
-  forest: {name: 'Лес', icon: '🌲', tier: 2, pvp: 'request', nodes: [{x: 20, y: 30}, {x: 40, y: 50}, {x: 30, y: 70}, {x: 60, y: 40}, {x: 80, y: 60}, {x: 70, y: 80}], paths: [[0, 1], [1, 2], [1, 3], [3, 4], [2, 5], [4, 5]], enemies: ['wolf', 'bear'], res: ['wood', 'leather'], exits: {0: 'meadow', 5: 'highlands'}},
-  highlands: {name: 'Высокогорье', icon: '⛰️', tier: 3, pvp: 'open', nodes: [{x: 50, y: 20}, {x: 30, y: 40}, {x: 70, y: 40}, {x: 40, y: 60}, {x: 60, y: 60}, {x: 50, y: 80}], paths: [[0, 1], [0, 2], [1, 3], [2, 4], [3, 5], [4, 5]], enemies: ['golem', 'harpy'], res: ['metal', 'leather'], exits: {0: 'forest'}}
-};
-
-const ENEMIES = {
-  slime: {name: 'Слизень', icon: '🟢', hp: 30, dmg: 5, xp: 10, loot: ['cloth']},
-  wolf: {name: 'Волк', icon: '🐺', hp: 50, dmg: 10, xp: 20, loot: ['leather']},
-  bear: {name: 'Медведь', icon: '🐻', hp: 80, dmg: 15, xp: 35, loot: ['leather', 'leather']},
-  golem: {name: 'Голем', icon: '🗿', hp: 120, dmg: 18, xp: 50, loot: ['metal', 'metal']},
-  harpy: {name: 'Гарпия', icon: '🦅', hp: 60, dmg: 20, xp: 45, loot: ['cloth']}
-};
-
-const PLAYERS = [
-  {name: 'Рыцарь_42', hp: 80, dmg: 15, loot: ['iron_sword']},
-  {name: 'MagicUser', hp: 60, dmg: 20, loot: ['wooden_staff']},
-  {name: 'Охотник', hp: 70, dmg: 18, loot: ['wooden_bow']}
-];
-
 </script>
 </body>
 </html>
